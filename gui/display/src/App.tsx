@@ -1,11 +1,23 @@
 import React from 'react';
-import {createBrowserRouter, Outlet, RouterProvider} from "react-router";
+import {createBrowserRouter, Navigate, Outlet, RouterProvider} from "react-router";
+import {MagicPage} from "./routes/magic/MagicPage";
+import ErrorElement from "./shared/ErrorElement";
 
 const router = createBrowserRouter([
     {
         path: '/',
         element: <div><Outlet/></div>,
-        children: []
+        children: [
+            {
+                index: true,
+                element: <Navigate to="/magic" replace={true}/>,
+            },
+            {
+                path: 'magic',
+                element: <MagicPage/>,
+                errorElement: <ErrorElement/>,
+            }
+        ]
     },
 ]);
 
