@@ -1,8 +1,9 @@
 import {configureStore} from "@reduxjs/toolkit";
+import {magicSlice} from "./magicSlice";
 
 export const magicStore = configureStore({
     reducer: {
-        // Add your reducers here
+        magic: magicSlice.reducer
     },
     middleware: (getDefaultMiddleware) =>
         getDefaultMiddleware(),

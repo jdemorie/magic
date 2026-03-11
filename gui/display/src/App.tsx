@@ -2,6 +2,7 @@ import React from 'react';
 import {createBrowserRouter, Navigate, Outlet, RouterProvider} from "react-router";
 import {MagicPage} from "./routes/magic/MagicPage";
 import ErrorElement from "./shared/ErrorElement";
+import {MagicGame} from "./routes/game/MagicGame";
 
 const router = createBrowserRouter([
     {
@@ -15,6 +16,11 @@ const router = createBrowserRouter([
             {
                 path: 'magic',
                 element: <MagicPage/>,
+                errorElement: <ErrorElement/>,
+            },
+            {
+                path: 'game',
+                element: <MagicGame/>,
                 errorElement: <ErrorElement/>,
             }
         ]

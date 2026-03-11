@@ -2,13 +2,17 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
+import {Provider} from "react-redux";
+import {magicStore} from "./store/magicStore";
 
 const root = ReactDOM.createRoot(
     document.getElementById('root') as HTMLElement
 );
 root.render(
     <React.StrictMode>
-        <App/>
+        <Provider store={magicStore}>
+            <App/>
+        </Provider>
     </React.StrictMode>
 );
 
