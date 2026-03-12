@@ -1,17 +1,21 @@
 import {MagicImage} from "../../shared/MagicImage";
-import {StyledBackgroundContainer, StyledBottomContainer, StyledButton, StyledTopRowContainer, StyledTypography} from "../../shared/SharedStyles";
+import {StyledButton, StyledTypography} from "../../shared/SharedStyles";
 import styled from "styled-components";
 import {useMagicGame} from "./useMagicGame";
 import {usePlayerOneName, usePlayerTwoName} from "../../store/magicSlice";
 import {Avatar} from "antd";
+import {motion} from "motion/react"
+import {MagicCardPack} from "./MagicCardPack";
 
-const StyledLeftContainer = styled.div`
-    display: flex;
-    flex-direction: row;
-    position: absolute;
-    left: 0;
-    align-items: center;
-    margin-left: 2rem;
+const BackgroundContainer = styled(motion.div)`
+    height: 100vh;
+    width: 100%;
+    background-image: url('/magic-card.jpg');
+    background-size: cover;
+    background-position: center;
+    display: grid;
+    grid-template-columns: 10% 40% 40%;
+    grid-template-rows: 10% 40% 40% 10%;
 `;
 
 export const MagicGame = () => {
@@ -20,24 +24,61 @@ export const MagicGame = () => {
     const {onBackButtonClick} = useMagicGame();
 
     return (
-        <StyledBackgroundContainer initial={{scale: 0}} animate={{
+        <BackgroundContainer initial={{scale: 0}} animate={{
             scale: 1,
             transition: {duration: 1}
         }}>
-            <MagicImage src="/magic-card.jpg" alt="magic-card"/>
-            <StyledTopRowContainer>
+            <div style={{
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+                gridColumn: '1 / 5',
+                gridRow: '1 / 1',
+                gap: '1rem',
+            }}>
                 <Avatar size={64} icon={<MagicImage src="/ulbrig.png" alt="ulbrig"/>}/>
                 <StyledTypography>{playerOneName}</StyledTypography>
                 <StyledButton>Play</StyledButton>
-            </StyledTopRowContainer>
-            <StyledBottomContainer>
+            </div>
+            <div style={{
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+                gridColumn: '1 / 5',
+                gridRow: '2 / 2',
+            }}>
+                <MagicCardPack/>
+            </div>
+            <div style={{
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+                gridColumn: '1 / 5',
+                gridRow: '3 / 3',
+            }}>
+                <MagicCardPack/>
+            </div>
+            <div style={{
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+                gridColumn: '1/ 5',
+                gridRow: '4 / 4',
+                gap: '1rem',
+            }}>
                 <Avatar size={64} icon={<MagicImage src="/regill.png" alt="regill"/>}/>
                 <StyledTypography>{playerTwoName}</StyledTypography>
                 <StyledButton>Play</StyledButton>
-            </StyledBottomContainer>
-            <StyledLeftContainer>
+            </div>
+            <div style={{
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+                gridColumn: '1 / 1',
+                gridRow: '1 / 5',
+            }}>
                 <StyledButton onClick={onBackButtonClick}>End</StyledButton>
-            </StyledLeftContainer>
-        </StyledBackgroundContainer>
+            </div>
+        </BackgroundContainer>
     )
 }

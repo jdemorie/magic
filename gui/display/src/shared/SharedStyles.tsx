@@ -32,13 +32,3 @@ export const StyledBackgroundContainer = styled(motion.div)`
     align-items: center;
     flex-direction: column;
 `;
-
-export const StyledBottomContainer = styled(motion.div)`
-    display: flex;
-    flex-direction: row;
-    position: absolute;
-    padding: 1rem;
-    gap: 1rem;
-    bottom: 0;
-    align-items: center;
-`;
