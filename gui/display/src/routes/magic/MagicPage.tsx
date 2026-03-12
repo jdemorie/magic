@@ -1,15 +1,15 @@
 import {FC} from "react";
-import styled from "styled-components";
-import {StyledBackgroundContainer, StyledButton} from "../../shared/SharedStyles";
+import {StyledBackgroundContainer, StyledButton, StyledTopRowContainer, StyledTypography} from "../../shared/SharedStyles";
 import {usePlayerOneName, usePlayerTwoName} from "../../store/magicSlice";
 import {MagicInput} from "../../shared/MagicInput";
 import {useMagicPage} from "./useMagicPage";
-import {Image} from "../../shared/Image";
+import {MagicImage} from "../../shared/MagicImage";
+import styled from "styled-components";
 
-export const StyledCenterContainer = styled.div`
-    position: absolute;
+const StyledCenterContainer = styled.div`
     display: flex;
     flex-direction: column;
+    position: absolute;
     gap: 1rem;
 `;
 
@@ -28,8 +28,14 @@ export const MagicPage: FC = () => {
     } = useMagicPage();
 
     return (
-        <StyledBackgroundContainer>
-            <Image src="/magic.jpg" alt="magic"/>
+        <StyledBackgroundContainer initial={{ opacity: 0 }} animate={{
+            opacity: 1,
+            transition: {duration: 3}
+        }}>
+            <MagicImage src="/magic.jpg" alt="magic"/>
+            <StyledTopRowContainer>
+                <StyledTypography>Magic: the gathering</StyledTypography>
+            </StyledTopRowContainer>
             <StyledCenterContainer>
                 <MagicInput value={playerOneName}
                             onInputChange={onPlayerOneNameChange}

@@ -6,6 +6,8 @@ import '@testing-library/jest-dom';
 import 'whatwg-fetch';
 
 import { TextEncoder } from 'util';
+import ResizeObserver from 'resize-observer-polyfill';
 
+global.ResizeObserver = ResizeObserver;
 // workaround for TextEncoder not being available in the jsdom environment
 global.TextEncoder = TextEncoder;

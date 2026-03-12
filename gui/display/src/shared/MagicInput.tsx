@@ -1,5 +1,6 @@
 import React, {FC} from "react";
 import styled from "styled-components";
+import {Input, Tooltip} from 'antd';
 
 interface MagicInputProps {
     placeholder?: string,
@@ -16,28 +17,28 @@ const StyledContainer = styled.div`
 `;
 
 const StyledLabel = styled.label`
-    color: red;
+    color: white;
     font-size: 1rem;
     height: 0.5rem;
 `;
 
-const StyledInput = styled.input<{ $error?: boolean; }>`
+const StyledInput = styled(Input)<{ $error?: boolean; }>`
     height: 2rem;
     width: 20rem;
-    border-color: ${props => props.$error ? "red" : "black"};
 `;
 
 export const MagicInput: FC<MagicInputProps> = ({placeholder, value, error, onInputChange, onInputKeyDown}) => {
     return (
         <StyledContainer>
-            <StyledInput type="text"
-                         value={value}
-                         placeholder={placeholder}
-                         onChange={onInputChange}
-                         onKeyDown={onInputKeyDown}
-                         $error={!!error}
-            />
-            <StyledLabel>{error}</StyledLabel>
+            <Tooltip title={error} open={error !== undefined} placement="right">
+                <StyledInput type="text"
+                             value={value}
+                             placeholder={placeholder}
+                             onChange={onInputChange}
+                             onKeyDown={onInputKeyDown}
+                             status={error === undefined ? undefined : "error"}
+                />
+            </Tooltip>
         </StyledContainer>
     );
 }

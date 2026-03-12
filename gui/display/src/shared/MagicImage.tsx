@@ -5,10 +5,10 @@ interface ImageProps {
     alt?: string,
 }
 
-export const Image: FC<ImageProps> = ({src, alt}) => {
+export const MagicImage: FC<ImageProps> = ({src, alt}) => {
     return (
         <div>
-            <img src={src} alt={alt} style={{width: '100%', height: 'auto'}}/>
+            <img src={src} alt={alt} style={{width: '100%', height: '100%'}}/>
         </div>
     );
 }

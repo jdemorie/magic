@@ -1,6 +1,6 @@
 import {FC} from "react";
 
-const ErrorElement: FC = () => {
+const MagicErrorElement: FC = () => {
     return (
         <div>
             <h1>Something went wrong</h1>
@@ -8,4 +8,4 @@ const ErrorElement: FC = () => {
     )
 }
 
-export default ErrorElement;
+export default MagicErrorElement;
