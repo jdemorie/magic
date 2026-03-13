@@ -1,11 +1,11 @@
-import {MagicImage} from "../../shared/MagicImage";
+import React from "react";
 import {StyledButton, StyledTypography} from "../../shared/SharedStyles";
 import styled from "styled-components";
 import {useMagicGame} from "./useMagicGame";
 import {usePlayerOneName, usePlayerTwoName} from "../../store/magicSlice";
-import {Avatar} from "antd";
 import {motion} from "motion/react"
 import {MagicCardPack} from "./MagicCardPack";
+import {MagicAvatar} from "./MagicAvatar";
 
 const BackgroundContainer = styled(motion.div)`
     height: 100vh;
@@ -18,6 +18,26 @@ const BackgroundContainer = styled(motion.div)`
     grid-template-rows: 10% 40% 40% 10%;
 `;
 
+const StyledDiv = styled.div<{ $column?: string; $row?: string }>`
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    grid-column: ${props => props.$column ? props.$column : '1 / 1'};
+    grid-row: ${props => props.$row ? props.$row : '1 / 1'};
+    gap: 1rem;
+`;
+
+const StyledCardDiv = styled.div<{ $column?: string; $row?: string }>`
+    display: flex;
+    align-items: center;
+    grid-column: ${props => props.$column ? props.$column : '1 / 1'};
+    grid-row: ${props => props.$row ? props.$row : '1 / 1'};
+    gap: 1rem;
+    overflow-x: auto;
+    max-width: 100%;
+    max-height: 80%;
+`;
+
 export const MagicGame = () => {
     const playerOneName = usePlayerOneName();
     const playerTwoName = usePlayerTwoName();
@@ -28,57 +48,31 @@ export const MagicGame = () => {
             scale: 1,
             transition: {duration: 1}
         }}>
-            <div style={{
-                display: 'flex',
-                justifyContent: 'center',
-                alignItems: 'center',
-                gridColumn: '1 / 5',
-                gridRow: '1 / 1',
-                gap: '1rem',
+            <StyledDiv $column="1 / 5" $row="1 / 1" style={{
+                marginTop: '1rem',
             }}>
-                <Avatar size={64} icon={<MagicImage src="/ulbrig.png" alt="ulbrig"/>}/>
+                <MagicAvatar src="/ulbrig.png" value={20}/>
+                <MagicAvatar src="/mana.png" value={0} color="#696FC7"/>
                 <StyledTypography>{playerOneName}</StyledTypography>
                 <StyledButton>Play</StyledButton>
-            </div>
-            <div style={{
-                display: 'flex',
-                justifyContent: 'center',
-                alignItems: 'center',
-                gridColumn: '1 / 5',
-                gridRow: '2 / 2',
-            }}>
+            </StyledDiv>
+            <StyledCardDiv $column="2 / 4" $row="2 / 2">
                 <MagicCardPack/>
-            </div>
-            <div style={{
-                display: 'flex',
-                justifyContent: 'center',
-                alignItems: 'center',
-                gridColumn: '1 / 5',
-                gridRow: '3 / 3',
-            }}>
+            </StyledCardDiv>
+            <StyledCardDiv $column="2 / 4" $row="3 / 3">
                 <MagicCardPack/>
-            </div>
-            <div style={{
-                display: 'flex',
-                justifyContent: 'center',
-                alignItems: 'center',
-                gridColumn: '1/ 5',
-                gridRow: '4 / 4',
-                gap: '1rem',
+            </StyledCardDiv>
+            <StyledDiv $column="1 / 5" $row="4 / 4" style={{
+                marginBottom: '1rem',
             }}>
-                <Avatar size={64} icon={<MagicImage src="/regill.png" alt="regill"/>}/>
+                <MagicAvatar src="/regill.png" value={20}/>
+                <MagicAvatar src="/mana.png" value={0} color="#696FC7"/>
                 <StyledTypography>{playerTwoName}</StyledTypography>
                 <StyledButton>Play</StyledButton>
-            </div>
-            <div style={{
-                display: 'flex',
-                justifyContent: 'center',
-                alignItems: 'center',
-                gridColumn: '1 / 1',
-                gridRow: '1 / 5',
-            }}>
+            </StyledDiv>
+            <StyledDiv $column="1 / 1" $row="1 / 5">
                 <StyledButton onClick={onBackButtonClick}>End</StyledButton>
-            </div>
+            </StyledDiv>
         </BackgroundContainer>
     )
 }

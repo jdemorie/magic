@@ -1,22 +1,27 @@
 import {Card} from "antd";
 import {MagicImage} from "../../shared/MagicImage";
-import {FC} from "react";
+import {FC, useMemo} from "react";
 
 interface MagicCardProps {
-    src?: string,
+    mana: number,
 }
 
 const {Meta} = Card;
 
-export const MagicCard: FC<MagicCardProps> = ({src}) => {
+export const MagicCard: FC<MagicCardProps> = ({mana}) => {
+    const srcIcon = useMemo(() => {
+        const value = mana + 1;
+        return `/magic-card-${value}.png`;
+    }, [mana]);
+
     return (
         <div style={{
             width: '150px',
             height: '200px'
         }}>
             <Card hoverable>
-                <MagicImage src={src} alt={`${src}-alt`}/>
-                <Meta title="10 mana" />
+                <MagicImage src={srcIcon} alt={`${srcIcon}-alt`}/>
+                <Meta title={`${mana} mana`}/>
             </Card>
         </div>
     );

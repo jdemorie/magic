@@ -10,12 +10,26 @@ export const MagicCardPack: FC = () => {
             flexDirection: 'row',
             gap: '1rem',
         }}>
-            <MagicCard src="/magic-card-1.png"/>
-            <MagicCard src="/magic-card-2.png"/>
-            <MagicCard src="/magic-card-3.png"/>
-            <MagicCard src="/magic-card-4.png"/>
-            <MagicCard src="/magic-card-5.png"/>
-            <MagicCard src="/magic-card-6.png"/>
+            <MagicCard mana={0}/>
+            <MagicCard mana={0}/>
+            <MagicCard mana={1}/>
+            <MagicCard mana={1}/>
+            <MagicCard mana={2}/>
+            <MagicCard mana={2}/>
+            <MagicCard mana={2}/>
+            <MagicCard mana={3}/>
+            <MagicCard mana={3}/>
+            <MagicCard mana={3}/>
+            <MagicCard mana={3}/>
+            <MagicCard mana={4}/>
+            <MagicCard mana={4}/>
+            <MagicCard mana={4}/>
+            <MagicCard mana={5}/>
+            <MagicCard mana={5}/>
+            <MagicCard mana={6}/>
+            <MagicCard mana={6}/>
+            <MagicCard mana={7}/>
+            <MagicCard mana={8}/>
             
         </div>
     );
