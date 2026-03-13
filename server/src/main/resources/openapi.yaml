@@ -1,0 +1,144 @@
+openapi: 3.0.3
+
+info:
+  title: Magic Internal API
+  version: "1.0"
+
+paths:
+  /server/start:
+    post:
+      summary: "POST server/start"
+      operationId: "startGame"
+      parameters:
+        - name: playerOneName
+          in: query
+          required: true
+          description: player one name
+          schema:
+            type: string
+        - name: playerTwoName
+          in: query
+          required: true
+          description: player two name
+          schema:
+            type: string
+      responses:
+        200:
+          $ref: "#/components/responses/ServerResponse"
+        404:
+          $ref: "#/components/responses/NotFound"
+        500:
+          $ref: "#/components/responses/ServerError"
+  /server/game:
+    get:
+      summary: "GET server/game"
+      operationId: "getGameInformation"
+      responses:
+        200:
+          $ref: "#/components/schemas/GameBean"
+        404:
+          $ref: "#/components/responses/NotFound"
+        500:
+          $ref: "#/components/responses/ServerError"
+  /server/game/card:
+    get:
+      summary: "GET server/game/card"
+      operationId: "getPlayerCard"
+      parameters:
+        - name: playerName
+          in: query
+          required: true
+          description: player name
+          schema:
+            type: string
+      responses:
+        200:
+          description: "OK"
+          content:
+            application/json:
+              schema:
+                type: "array"
+                items:
+                  $ref: "#/components/schemas/DamageCardBean"
+        404:
+          $ref: "#/components/responses/NotFound"
+        500:
+          $ref: "#/components/responses/ServerError"
+components:
+  responses:
+    ServerResponse:
+      description: OK
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ResponseBean"
+    NotFound:
+      description: Not found
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorBean"
+    ServerError:
+      description: Internal server error
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorBean"
+  schemas:
+    PlayerBean:
+      type: object
+      properties:
+        name:
+          type: string
+          description: "player name"
+        health:
+          type: integer
+          description: "player health"
+        manaSlots:
+          type: integer
+          description: "player mana slots"
+      required:
+        - name
+    GameBean:
+      type: object
+      properties:
+        playerOne:
+          $ref: "#/components/schemas/PlayerBean"
+        playerOneCards:
+          type: array
+          items:
+            $ref: "#/components/schemas/DamageCardBean"
+        playerTwo:
+          $ref: "#/components/schemas/PlayerBean"
+        playerTwoCards:
+          type: array
+          items:
+            $ref: "#/components/schemas/DamageCardBean"
+      required:
+        - player1
+        - player2
+    DamageCardBean:
+      type: object
+      properties:
+        mana:
+          type: string
+          description: "card mana cost"
+      required:
+        - mana
+    ResponseBean:
+      type: object
+      properties:
+        message:
+          type: string
+          description: "Response message"
+      required:
+        - message
+    ErrorBean:
+      type: object
+      properties:
+        message:
+          type: string
+          description: "Error message"
+      required:
+        - code
+        - message

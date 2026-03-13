@@ -17,10 +17,18 @@
   <modules>
     <module>game</module>
     <module>gui</module>
+    <module>server</module>
   </modules>
 
   <dependencyManagement>
     <dependencies>
+      <dependency>
+        <groupId>io.micronaut.platform</groupId>
+        <artifactId>micronaut-platform</artifactId>
+        <version>4.10.9</version>
+        <type>pom</type>
+        <scope>import</scope>
+      </dependency>
       <dependency>
         <groupId>org.junit.jupiter</groupId>
         <artifactId>junit-jupiter-api</artifactId>
