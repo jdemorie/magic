@@ -75,10 +75,10 @@ export const MagicGame = () => {
                              src="/passed.png" tooltipText="Passed"/>
             </GridDiv>
             <CardDiv $column="2 / 4" $row="2 / 2">
-                <MagicCardPack playerName={playerOneName}/>
+                <MagicCardPack playerName={playerOneName} disabled={disabledPlayButtonForPlayerOne}/>
             </CardDiv>
             <CardDiv $column="2 / 4" $row="3 / 3">
-                <MagicCardPack playerName={playerTwoName}/>
+                <MagicCardPack playerName={playerTwoName} disabled={disabledPlayButtonForPlayerTwo}/>
             </CardDiv>
             <GridDiv $column="1 / 5" $row="4 / 4" style={{
                 marginBottom: '1rem',
@@ -88,7 +88,7 @@ export const MagicGame = () => {
                 <MagicAvatar src="/mana.png" value={playerTwoMana} color="#696FC7" testId={testIds.playerTwoMana}/>
                 <MagicButton onClick={onPlayerTwoPlay} testId={testIds.playButtonForPlayerTwo}
                              disabled={disabledPlayButtonForPlayerTwo} src="/attack.png" tooltipText="Play"/>
-                <MagicButton onClick={onPlayerTwoPassed} testId={testIds.passButtonForPlayerOne} disabled={disabledPlayButtonForPlayerTwo}
+                <MagicButton onClick={onPlayerTwoPassed} testId={testIds.passButtonForPlayerTwo} disabled={disabledPlayButtonForPlayerTwo}
                              src="/passed.png" tooltipText="Passed"/>
             </GridDiv>
             <GridDiv $column="1 / 1" $row="1 / 5">

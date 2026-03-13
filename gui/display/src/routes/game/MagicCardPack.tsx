@@ -4,9 +4,10 @@ import {usePlayerOneCards, usePlayerOneName, usePlayerTwoCards} from "../../stor
 
 interface MagicCardPackProps {
     playerName: string,
+    disabled?: boolean,
 }
 
-export const MagicCardPack: FC<MagicCardPackProps> = ({playerName}) => {
+export const MagicCardPack: FC<MagicCardPackProps> = ({playerName, disabled}) => {
     const playerOneName = usePlayerOneName();
     const playerOneCards = usePlayerOneCards();
     const playerTwoCards = usePlayerTwoCards();
@@ -27,7 +28,7 @@ export const MagicCardPack: FC<MagicCardPackProps> = ({playerName}) => {
         }}>
             {
                 cards.map((card, index) => (
-                    <MagicCard key={index} mana={card.mana} index={index} player={playerName}/>
+                    <MagicCard key={index} mana={card.mana} index={index} player={playerName} disabled={disabled}/>
                 ))
             }
         </div>
