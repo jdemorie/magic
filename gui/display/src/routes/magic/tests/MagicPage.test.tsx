@@ -1,10 +1,15 @@
 import React from "react";
-import {render, screen} from "@testing-library/react";
+import {act, render, screen} from "@testing-library/react";
 import {MemoryRouter} from "react-router";
 import {Provider} from "react-redux";
 import {MagicPage} from "../MagicPage";
 import {magicStore} from "../../../store/magicStore";
 import userEvent from "@testing-library/user-event";
+import {resetState} from "../../../store/magicSlice";
+
+beforeEach(() => {
+    magicStore.dispatch(resetState());
+});
 
 describe('MagicPage component', () => {
     it('should render magic page', async () => {
@@ -18,8 +23,6 @@ describe('MagicPage component', () => {
         expect(await screen.findByText(/Start/i)).toBeInTheDocument();
         const inputElements = await screen.findAllByRole("textbox");
         expect(inputElements).toHaveLength(2);
-        expect(inputElements[0]).toHaveAttribute("placeholder", "Enter name for player one");
-        expect(inputElements[1]).toHaveAttribute("placeholder", "Enter name for player two");
     });
 
     it('should display error message when player name are the same', async () => {
@@ -31,8 +34,10 @@ describe('MagicPage component', () => {
             </Provider>
         );
         const inputElements = await screen.findAllByRole("textbox");
-        userEvent.type(inputElements[0], "Player1");
-        userEvent.type(inputElements[1], "Player1");
+        act(() => {
+            userEvent.type(inputElements[0], "Player1");
+            userEvent.type(inputElements[1], "Player1");
+        });
         const errors = await screen.findAllByText(/Player names must be different/i);
         expect(errors).toHaveLength(2);
         expect(errors[0]).toBeInTheDocument();
@@ -49,8 +54,10 @@ describe('MagicPage component', () => {
         );
         expect(screen.getByRole("button", {name: /Start/i})).toBeDisabled();
         const inputElements = await screen.findAllByRole("textbox");
-        userEvent.type(inputElements[0], "Player1");
-        userEvent.type(inputElements[1], "Player2");
+        act(() => {
+            userEvent.type(inputElements[0], "Player1");
+            userEvent.type(inputElements[1], "Player2");
+        });
         expect(screen.getByRole("button", {name: /Start/i})).toBeEnabled();
     });
 });

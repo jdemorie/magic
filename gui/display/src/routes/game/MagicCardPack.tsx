@@ -1,7 +1,22 @@
-import {FC} from "react";
+import {FC, useMemo} from "react";
 import {MagicCard} from "./MagicCard";
+import {usePlayerOneCards, usePlayerOneName, usePlayerTwoCards} from "../../store/magicSlice";
 
-export const MagicCardPack: FC = () => {
+interface MagicCardPackProps {
+    playerName: string,
+}
+
+export const MagicCardPack: FC<MagicCardPackProps> = ({playerName}) => {
+    const playerOneName = usePlayerOneName();
+    const playerOneCards = usePlayerOneCards();
+    const playerTwoCards = usePlayerTwoCards();
+    const cards = useMemo(() => {
+        if (playerName === playerOneName) {
+            return playerOneCards;
+        }
+        return playerTwoCards
+    }, [playerName, playerOneName, playerOneCards, playerTwoCards]);
+
     return (
         <div style={{
             display: 'flex',
@@ -10,27 +25,11 @@ export const MagicCardPack: FC = () => {
             flexDirection: 'row',
             gap: '1rem',
         }}>
-            <MagicCard mana={0}/>
-            <MagicCard mana={0}/>
-            <MagicCard mana={1}/>
-            <MagicCard mana={1}/>
-            <MagicCard mana={2}/>
-            <MagicCard mana={2}/>
-            <MagicCard mana={2}/>
-            <MagicCard mana={3}/>
-            <MagicCard mana={3}/>
-            <MagicCard mana={3}/>
-            <MagicCard mana={3}/>
-            <MagicCard mana={4}/>
-            <MagicCard mana={4}/>
-            <MagicCard mana={4}/>
-            <MagicCard mana={5}/>
-            <MagicCard mana={5}/>
-            <MagicCard mana={6}/>
-            <MagicCard mana={6}/>
-            <MagicCard mana={7}/>
-            <MagicCard mana={8}/>
-            
+            {
+                cards.map((card, index) => (
+                    <MagicCard key={index} mana={card.mana} index={card.index} player={playerName}/>
+                ))
+            }
         </div>
     );
 }

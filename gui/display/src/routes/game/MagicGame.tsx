@@ -2,10 +2,11 @@ import React from "react";
 import {StyledButton, StyledTypography} from "../../shared/SharedStyles";
 import styled from "styled-components";
 import {useMagicGame} from "./useMagicGame";
-import {usePlayerOneName, usePlayerTwoName} from "../../store/magicSlice";
+import {usePlayerOneHealth, usePlayerOneMana, usePlayerOneName, usePlayerTwoHealth, usePlayerTwoMana, usePlayerTwoName} from "../../store/magicSlice";
 import {motion} from "motion/react"
 import {MagicCardPack} from "./MagicCardPack";
 import {MagicAvatar} from "./MagicAvatar";
+import {testIds} from "../../shared/testIds";
 
 const BackgroundContainer = styled(motion.div)`
     height: 100vh;
@@ -41,6 +42,11 @@ const StyledCardDiv = styled.div<{ $column?: string; $row?: string }>`
 export const MagicGame = () => {
     const playerOneName = usePlayerOneName();
     const playerTwoName = usePlayerTwoName();
+    const playerOneHealth = usePlayerOneHealth();
+    const playerTwoHealth = usePlayerTwoHealth();
+    const playerOneMana = usePlayerOneMana();
+    const playerTwoMana = usePlayerTwoMana();
+
     const {onBackButtonClick} = useMagicGame();
 
     return (
@@ -51,22 +57,22 @@ export const MagicGame = () => {
             <StyledDiv $column="1 / 5" $row="1 / 1" style={{
                 marginTop: '1rem',
             }}>
-                <MagicAvatar src="/ulbrig.png" value={20}/>
-                <MagicAvatar src="/mana.png" value={0} color="#696FC7"/>
+                <MagicAvatar src="/ulbrig.png" value={playerOneHealth} testId={testIds.playerOneAvatar}/>
+                <MagicAvatar src="/mana.png" value={playerOneMana} color="#696FC7" testId={testIds.playerOneMana}/>
                 <StyledTypography>{playerOneName}</StyledTypography>
                 <StyledButton>Play</StyledButton>
             </StyledDiv>
             <StyledCardDiv $column="2 / 4" $row="2 / 2">
-                <MagicCardPack/>
+                <MagicCardPack playerName={playerOneName}/>
             </StyledCardDiv>
             <StyledCardDiv $column="2 / 4" $row="3 / 3">
-                <MagicCardPack/>
+                <MagicCardPack playerName={playerTwoName}/>
             </StyledCardDiv>
             <StyledDiv $column="1 / 5" $row="4 / 4" style={{
                 marginBottom: '1rem',
             }}>
-                <MagicAvatar src="/regill.png" value={20}/>
-                <MagicAvatar src="/mana.png" value={0} color="#696FC7"/>
+                <MagicAvatar src="/regill.png" value={playerTwoHealth} testId={testIds.playerTwoAvatar}/>
+                <MagicAvatar src="/mana.png" value={playerTwoMana} color="#696FC7" testId={testIds.playerTwoMana}/>
                 <StyledTypography>{playerTwoName}</StyledTypography>
                 <StyledButton>Play</StyledButton>
             </StyledDiv>
