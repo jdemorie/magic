@@ -2,7 +2,9 @@ import {createSlice} from "@reduxjs/toolkit";
 import {useDispatch, useSelector} from "react-redux";
 import {useCallback} from "react";
 
-interface MagicState {
+export const sliceName = "magic";
+
+export interface MagicState {
     players: {
         playerOneName: string,
         playerTwoName: string,
@@ -17,7 +19,7 @@ const initialState: MagicState = {
 }
 
 export const magicSlice = createSlice({
-    name: "magic",
+    name: sliceName,
     initialState,
     reducers: {
         setPlayerOneName: (state, action) => {
@@ -30,10 +32,10 @@ export const magicSlice = createSlice({
 });
 
 export const usePlayerOneName = () =>
-    useSelector((state: { ['magic']: MagicState }) => state['magic'].players.playerOneName);
+    useSelector((state: { [sliceName]: MagicState }) => state[sliceName].players.playerOneName);
 
 export const usePlayerTwoName = () =>
-    useSelector((state: { ['magic']: MagicState }) => state['magic'].players.playerTwoName);
+    useSelector((state: { [sliceName]: MagicState }) => state[sliceName].players.playerTwoName);
 
 export const useSetPlayerOneName = () => {
     const dispatch = useDispatch();

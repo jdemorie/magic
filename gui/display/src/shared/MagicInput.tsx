@@ -16,12 +16,6 @@ const StyledContainer = styled.div`
     gap: 0.2rem;
 `;
 
-const StyledLabel = styled.label`
-    color: white;
-    font-size: 1rem;
-    height: 0.5rem;
-`;
-
 const StyledInput = styled(Input)<{ $error?: boolean; }>`
     height: 2rem;
     width: 20rem;

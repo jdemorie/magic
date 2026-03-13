@@ -1,16 +1,19 @@
 import {FC} from "react";
-import {StyledBackgroundContainer, StyledButton, StyledTopRowContainer, StyledTypography} from "../../shared/SharedStyles";
+import {StyledButton, StyledTypography} from "../../shared/SharedStyles";
 import {usePlayerOneName, usePlayerTwoName} from "../../store/magicSlice";
 import {MagicInput} from "../../shared/MagicInput";
 import {useMagicPage} from "./useMagicPage";
-import {MagicImage} from "../../shared/MagicImage";
 import styled from "styled-components";
+import {motion} from "motion/react";
 
-const StyledCenterContainer = styled.div`
-    display: flex;
-    flex-direction: column;
-    position: absolute;
-    gap: 1rem;
+const BackgroundContainer = styled(motion.div)`
+    height: 100vh;
+    width: 100%;
+    background-image: url('/magic.jpg');
+    background-size: cover;
+    background-position: center;
+    display: grid;
+    grid-template-rows: 10% 90%;
 `;
 
 export const MagicPage: FC = () => {
@@ -28,15 +31,26 @@ export const MagicPage: FC = () => {
     } = useMagicPage();
 
     return (
-        <StyledBackgroundContainer initial={{ opacity: 0 }} animate={{
+        <BackgroundContainer initial={{opacity: 0}} animate={{
             opacity: 1,
             transition: {duration: 3}
         }}>
-            <MagicImage src="/magic.jpg" alt="magic"/>
-            <StyledTopRowContainer>
+            <div style={{
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+                gridRow: '1 / 1',
+            }}>
                 <StyledTypography>Magic: the gathering</StyledTypography>
-            </StyledTopRowContainer>
-            <StyledCenterContainer>
+            </div>
+            <div style={{
+                display: 'flex',
+                flexDirection: 'column',
+                justifyContent: 'center',
+                alignItems: 'center',
+                gridRow: '2 / 2',
+                gap: '1rem',
+            }}>
                 <MagicInput value={playerOneName}
                             onInputChange={onPlayerOneNameChange}
                             onInputKeyDown={onKeyDown}
@@ -50,7 +64,6 @@ export const MagicPage: FC = () => {
                             error={playerTwoErrorText}
                 />
                 <StyledButton onClick={onStart} disabled={disabled}>Start</StyledButton>
-            </StyledCenterContainer>
-
-        </StyledBackgroundContainer>);
+            </div>
+        </BackgroundContainer>);
 }

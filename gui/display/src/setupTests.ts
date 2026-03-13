@@ -5,8 +5,18 @@
 import '@testing-library/jest-dom';
 import 'whatwg-fetch';
 
-import { TextEncoder } from 'util';
+import {TextEncoder} from 'util';
 import ResizeObserver from 'resize-observer-polyfill';
+
+global.matchMedia = global.matchMedia || function () {
+    return {
+        matches: false,
+        addListener: function () {
+        },
+        removeListener: function () {
+        }
+    }
+}
 
 global.ResizeObserver = ResizeObserver;
 // workaround for TextEncoder not being available in the jsdom environment

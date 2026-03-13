@@ -13,22 +13,3 @@ export const StyledTypography = styled(motion.create(Typography))`
     color: white;
     font-size: 2rem;
 `;
-
-export const StyledTopRowContainer = styled(motion.div)`
-    display: flex;
-    flex-direction: row;
-    position: absolute;
-    padding: 1rem;
-    top: 0;
-    align-items: center;
-    gap: 1rem;
-`;
-
-export const StyledBackgroundContainer = styled(motion.div)`
-    display: flex;
-    height: 100vh;
-    width: 100%;
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;
-`;
