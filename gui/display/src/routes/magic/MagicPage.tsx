@@ -64,9 +64,7 @@ export const MagicPage: FC = () => {
                             placeholder="Enter name for player two"
                             error={playerTwoErrorText}
                 />
-                <MagicButton onClick={onStart} disabled={disabled}>
-                    Start
-                </MagicButton>
+                <MagicButton onClick={onStart} disabled={disabled} text="Start"/>
             </div>
         </BackgroundContainer>);
 }

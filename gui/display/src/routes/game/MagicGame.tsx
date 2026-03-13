@@ -70,12 +70,9 @@ export const MagicGame = () => {
                 <MagicAvatar src="/ulbrig.png" value={playerOneHealth} testId={testIds.playerOneAvatar}/>
                 <MagicAvatar src="/mana.png" value={playerOneMana} color="#696FC7" testId={testIds.playerOneMana}/>
                 <MagicButton onClick={onPlayerOnePlay} testId={testIds.playButtonForPlayerOne}
-                             disabled={disabledPlayButtonForPlayerOne}>
-                    Play
-                </MagicButton>
-                <MagicButton onClick={onPlayerOnePassed} testId={testIds.passButtonForPlayerOne} disabled={disabledPlayButtonForPlayerOne}>
-                    Passed
-                </MagicButton>
+                             disabled={disabledPlayButtonForPlayerOne} src="/attack.png" tooltipText="Play"/>
+                <MagicButton onClick={onPlayerOnePassed} testId={testIds.passButtonForPlayerOne} disabled={disabledPlayButtonForPlayerOne}
+                             src="/passed.png" tooltipText="Passed"/>
             </GridDiv>
             <CardDiv $column="2 / 4" $row="2 / 2">
                 <MagicCardPack playerName={playerOneName}/>
@@ -90,12 +87,9 @@ export const MagicGame = () => {
                 <MagicAvatar src="/regill.png" value={playerTwoHealth} testId={testIds.playerTwoAvatar}/>
                 <MagicAvatar src="/mana.png" value={playerTwoMana} color="#696FC7" testId={testIds.playerTwoMana}/>
                 <MagicButton onClick={onPlayerTwoPlay} testId={testIds.playButtonForPlayerTwo}
-                             disabled={disabledPlayButtonForPlayerTwo}>
-                    Play
-                </MagicButton>
-                <MagicButton onClick={onPlayerTwoPassed} testId={testIds.passButtonForPlayerOne} disabled={disabledPlayButtonForPlayerTwo}>
-                    Passed
-                </MagicButton>
+                             disabled={disabledPlayButtonForPlayerTwo} src="/attack.png" tooltipText="Play"/>
+                <MagicButton onClick={onPlayerTwoPassed} testId={testIds.passButtonForPlayerOne} disabled={disabledPlayButtonForPlayerTwo}
+                             src="/passed.png" tooltipText="Passed"/>
             </GridDiv>
             <GridDiv $column="1 / 1" $row="1 / 5">
                 <MagicExitButton/>

@@ -61,7 +61,6 @@ describe('MagicGame component', () => {
             }));
         });
         const card = await screen.findByTestId(`${testIds.card}-Player One-0-3`);
-        screen.debug(card);
         expect(card).toBeInTheDocument();
         const cardStyle = window.getComputedStyle(card);
         expect(cardStyle.boxShadow).toBe('0 2px 8px #A7AAE1');
