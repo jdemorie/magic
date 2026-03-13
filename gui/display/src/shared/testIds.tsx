@@ -3,5 +3,10 @@ export const testIds = {
     playerTwoAvatar: 'player-two-avatar',
     playerOneMana: 'player-one-mana',
     playerTwoMana: 'player-two-mana',
+    playButtonForPlayerOne: 'play-button-player-one',
+    passButtonForPlayerOne: 'pass-button-player-one',
+    playButtonForPlayerTwo: 'play-button-player-two',
+    passButtonForPlayerTwo: 'pass-button-player-two',
     card: 'card',
+    exitButton: 'exit-button',
 }

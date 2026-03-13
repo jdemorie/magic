@@ -1,10 +1,11 @@
-import {FC} from "react";
-import {StyledButton, StyledTypography} from "../../shared/SharedStyles";
+import React, {FC} from "react";
+import {StyledTypography} from "../../shared/SharedStyles";
 import {usePlayerOneName, usePlayerTwoName} from "../../store/magicSlice";
 import {MagicInput} from "../../shared/MagicInput";
 import {useMagicPage} from "./useMagicPage";
 import styled from "styled-components";
 import {motion} from "motion/react";
+import {MagicButton} from "../../shared/MagicButton";
 
 const BackgroundContainer = styled(motion.div)`
     height: 100vh;
@@ -63,7 +64,9 @@ export const MagicPage: FC = () => {
                             placeholder="Enter name for player two"
                             error={playerTwoErrorText}
                 />
-                <StyledButton onClick={onStart} disabled={disabled}>Start</StyledButton>
+                <MagicButton onClick={onStart} disabled={disabled}>
+                    Start
+                </MagicButton>
             </div>
         </BackgroundContainer>);
 }

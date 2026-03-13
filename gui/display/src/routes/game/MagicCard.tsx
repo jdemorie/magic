@@ -1,5 +1,4 @@
 import {Card} from "antd";
-import {MagicImage} from "../../shared/MagicImage";
 import React, {FC, useCallback, useMemo} from "react";
 import {usePlayerOneCards, usePlayerOneName, usePlayerTwoCards, useSetPlayerOneSelectedCard} from "../../store/magicSlice";
 import {testIds} from "../../shared/testIds";
@@ -49,7 +48,7 @@ export const MagicCard: FC<MagicCardProps> = ({index, mana, player}) => {
                 boxShadow: selected ? '0 4px 12px #FF5733' : '0 2px 8px #A7AAE1',
                 borderRadius: 8,
             }} hoverable>
-                <MagicImage src={srcIcon} alt={`${srcIcon}-alt`}/>
+                <img src={srcIcon} alt={`${srcIcon}-alt`} style={{width: '100%', height: '100%'}}/>
                 <Meta title={`${mana} mana`}/>
             </Card>
         </div>

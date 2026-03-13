@@ -26,7 +26,7 @@ describe('MagicGame component', () => {
             magicStore.dispatch(setPlayerTwoMana("Player Two"));
         });
 
-        expect(await screen.findByText(/End/i)).toBeInTheDocument();
+        expect(await screen.findByTestId(testIds.exitButton)).toBeInTheDocument();
         expect(await screen.findByText(/Player One/i)).toBeInTheDocument();
         expect(await screen.findByText(/Player Two/i)).toBeInTheDocument();
 
@@ -56,7 +56,6 @@ describe('MagicGame component', () => {
             magicStore.dispatch(setPlayerOneName("Player One"));
             magicStore.dispatch(setPlayerTwoMana("Player Two"));
             magicStore.dispatch(addPlayerOneCard({
-                index: 0,
                 mana: 3,
                 selected: false,
             }));
@@ -80,7 +79,6 @@ describe('MagicGame component', () => {
             magicStore.dispatch(setPlayerOneName("Player One"));
             magicStore.dispatch(setPlayerTwoMana("Player Two"));
             magicStore.dispatch(addPlayerOneCard({
-                index: 0,
                 mana: 3,
                 selected: false,
             }));
@@ -99,5 +97,37 @@ describe('MagicGame component', () => {
         });
         const deselectedCardStyle = window.getComputedStyle(card);
         expect(deselectedCardStyle.boxShadow).toBe('0 2px 8px #A7AAE1');
+    });
+
+    it('should remove selected card when player has played his turn', async () => {
+        render(
+            <Provider store={magicStore}>
+                <MemoryRouter>
+                    <MagicGame/>
+                </MemoryRouter>
+            </Provider>
+        );
+        act(() => {
+            magicStore.dispatch(setPlayerOneName("Player One"));
+            magicStore.dispatch(setPlayerTwoMana("Player Two"));
+            magicStore.dispatch(addPlayerOneCard({
+                mana: 3,
+                selected: false,
+            }));
+            magicStore.dispatch(addPlayerOneCard({
+                mana: 8,
+                selected: false,
+            }));
+        });
+        const card = await screen.findByTestId(`${testIds.card}-Player One-0-3`);
+        act(() => {
+            userEvent.click(card);
+        });
+        const play = await screen.findByTestId(`${testIds.playButtonForPlayerOne}`);
+        expect(play).toBeInTheDocument();
+        act(() => {
+            userEvent.click(play);
+        });
+        expect(screen.queryByTestId(`${testIds.card}-Player One-0-3`)).not.toBeInTheDocument();
     });
 });

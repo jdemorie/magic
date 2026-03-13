@@ -5,10 +5,11 @@ import {useCallback} from "react";
 export const sliceName = "magic";
 
 interface Card {
-    index: number,
     mana: number,
     selected: boolean,
 }
+
+export type ActivePlayer = "PlayerOne" | "PlayerTwo";
 
 interface MagicState {
     players: {
@@ -25,6 +26,7 @@ interface MagicState {
             cards: Card[],
         },
     },
+    active: ActivePlayer,
 }
 
 const initialState: MagicState = {
@@ -41,7 +43,8 @@ const initialState: MagicState = {
             mana: 0,
             cards: [],
         },
-    }
+    },
+    active: "PlayerOne",
 }
 
 export const magicSlice = createSlice({
@@ -67,58 +70,45 @@ export const magicSlice = createSlice({
             state.players.playerTwo.mana = action.payload;
         },
         setPlayerOneSelectedCard: (state, action: { payload: number }) => {
-            state.players.playerOne.cards = state.players.playerOne.cards.map((card) => {
-                if (card.index === action.payload) {
-                    return {
-                        ...card,
-                        selected: !card.selected,
-                    }
-                }
-                return {
-                    ...card,
-                    selected: false,
+            state.players.playerOne.cards.forEach((card, index) => {
+                if (index === action.payload) {
+                    state.players.playerOne.cards[index].selected = !card.selected;
+                } else {
+                    state.players.playerOne.cards[index].selected = false;
                 }
             });
         },
         setPlayerTwoSelectedCard: (state, action: { payload: number }) => {
-            state.players.playerTwo.cards = state.players.playerTwo.cards.map((card) => {
-                if (card.index === action.payload) {
-                    return {
-                        ...card,
-                        selected: !card.selected,
-                    }
-                }
-                return {
-                    ...card,
-                    selected: false,
+            state.players.playerTwo.cards.forEach((card, index) => {
+                if (index === action.payload) {
+                    state.players.playerTwo.cards[index].selected = !card.selected;
+                } else {
+                    state.players.playerTwo.cards[index].selected = false;
                 }
             });
         },
         addPlayerOneCard: (state, action: { payload: Card }) => {
-            action.payload.index = state.players.playerOne.cards.length;
             state.players.playerOne.cards = [
                 ...state.players.playerOne.cards,
                 action.payload,
             ];
         },
         removePlayerOneCard: (state, action: { payload: number }) => {
-            const found =
-                state.players.playerOne.cards.find((card) => card.mana === action.payload);
             state.players.playerOne.cards =
-                state.players.playerOne.cards.filter((card) => card === found);
+                state.players.playerOne.cards.filter((card, index) => index !== action.payload);
         },
         addPlayerTwoCard: (state, action: { payload: Card }) => {
-            action.payload.index = state.players.playerTwo.cards.length;
             state.players.playerTwo.cards = [
                 ...state.players.playerTwo.cards,
                 action.payload,
             ];
         },
         removePlayerTwoCard: (state, action: { payload: number }) => {
-            const found =
-                state.players.playerTwo.cards.find((card) => card.index === action.payload);
             state.players.playerTwo.cards =
-                state.players.playerTwo.cards.filter((card) => card === found);
+                state.players.playerTwo.cards.filter((card, index) => index !== action.payload);
+        },
+        setActivePlayer: (state, action: { payload: ActivePlayer }) => {
+            state.active = action.payload;
         },
         resetState: () => initialState,
     },
@@ -147,6 +137,9 @@ export const usePlayerOneCards = () =>
 
 export const usePlayerTwoCards = () =>
     useSelector((state: { [sliceName]: MagicState }) => state[sliceName].players.playerTwo.cards);
+
+export const useActivePlayer = () =>
+    useSelector((state: { [sliceName]: MagicState }) => state[sliceName].active);
 
 export const useAddPlayerOneCard = () => {
     const dispatch = useDispatch();
@@ -256,6 +249,15 @@ export const useSetPlayerTwoSelectedCard = () => {
     );
 }
 
+export const useSetActivePlayer = () => {
+    const dispatch = useDispatch();
+    return useCallback((activePlayer: ActivePlayer) => {
+            dispatch(setActivePlayer(activePlayer));
+        },
+        [dispatch],
+    );
+}
+
 export const {
     actions: {
         setPlayerOneName,
@@ -270,6 +272,7 @@ export const {
         setPlayerTwoSelectedCard,
         addPlayerTwoCard,
         removePlayerTwoCard,
+        setActivePlayer,
         resetState,
     },
 } = magicSlice;
