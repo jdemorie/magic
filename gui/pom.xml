@@ -18,6 +18,68 @@
   <build>
     <plugins>
       <plugin>
+        <artifactId>maven-antrun-plugin</artifactId>
+        <version>3.1.0</version>
+        <executions>
+          <execution>
+            <id>npm-install</id>
+            <phase>compile</phase>
+            <configuration>
+              <target name="install">
+                <exec executable="npm" dir="${project.basedir}/display" failonerror="true">
+                  <arg line="install"/>
+                </exec>
+              </target>
+            </configuration>
+            <goals>
+              <goal>run</goal>
+            </goals>
+          </execution>
+          <execution>
+            <id>npm-ci</id>
+            <phase>compile</phase>
+            <configuration>
+              <target name="ci">
+                <exec executable="npm" dir="${project.basedir}/display" failonerror="true">
+                  <arg line="ci"/>
+                </exec>
+              </target>
+            </configuration>
+            <goals>
+              <goal>run</goal>
+            </goals>
+          </execution>
+          <execution>
+            <id>npm-test</id>
+            <phase>test</phase>
+            <configuration>
+              <target name="test">
+                <exec executable="npm" dir="${project.basedir}/display" failonerror="true">
+                  <arg line="run test"/>
+                </exec>
+              </target>
+            </configuration>
+            <goals>
+              <goal>run</goal>
+            </goals>
+          </execution>
+          <execution>
+            <id>npm-build</id>
+            <phase>prepare-package</phase>
+            <configuration>
+              <target name="build">
+                <exec executable="npm" dir="${project.basedir}/display" failonerror="true">
+                  <arg line="run build"/>
+                </exec>
+              </target>
+            </configuration>
+            <goals>
+              <goal>run</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
         <artifactId>maven-resources-plugin</artifactId>
         <version>3.3.1</version>
         <executions>

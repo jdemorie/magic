@@ -1,0 +1,28 @@
+{
+  "playerOne": {
+    "name": "Player One",
+    "health": 20,
+    "manaSlots": 0
+  },
+  "playerOneCards": [
+    {
+      "mana": 0
+    },
+    {
+      "mana": 0
+    }
+  ],
+  "playerTwo": {
+    "name": "Player Two",
+    "health": 20,
+    "manaSlots": 0
+  },
+  "playerTwoCards": [
+    {
+      "mana": 0
+    },
+    {
+      "mana": 0
+    }
+  ]
+}

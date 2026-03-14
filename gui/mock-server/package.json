@@ -1,0 +1,15 @@
+{
+  "name": "mocks",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "dependencies": {
+    "cors": "^2.8.6",
+    "cross-env": "^10.1.0",
+    "express": "^5.2.1",
+    "msw": "^2.12.10"
+  },
+  "scripts": {
+    "start": "cross-env NODE_ENV=development node index.js"
+  }
+}
