@@ -1,10 +1,12 @@
 import React, {useCallback, useEffect, useState} from "react";
 import {useNavigate} from "react-router";
 import {usePlayerOneName, usePlayerTwoName, useSetPlayerOneName, useSetPlayerTwoName} from "../../store/magicSlice";
+import {useStartGame} from "./useStartGame";
 
 export const useMagicPage = () => {
     const [playerOneErrorText, setPlayerOneErrorText] = useState<string | undefined>(undefined);
     const [playerTwoErrorText, setPlayerTwoErrorText] = useState<string | undefined>(undefined);
+    const {startGame, isStartSuccess} = useStartGame();
     const setPlayerOneName = useSetPlayerOneName();
     const setPlayerTwoName = useSetPlayerTwoName();
     const playerOneName = usePlayerOneName();
@@ -14,18 +16,20 @@ export const useMagicPage = () => {
 
     useEffect(() => {
         setDisabled(playerOneName === "" || playerTwoName === "" || playerOneName === undefined || playerTwoName === undefined || playerOneName === playerTwoName);
-    }, [playerOneName, playerTwoName]);
-
-    const onStart = useCallback((_: React.MouseEvent<HTMLButtonElement>): void => {
+        if (isStartSuccess) {
             navigate("/game");
         }
-        , [navigate]);
+    }, [playerOneName, playerTwoName, isStartSuccess, navigate]);
+
+    const onStart = useCallback((_: React.MouseEvent<HTMLButtonElement>): void => {
+        startGame(playerOneName!, playerTwoName!);
+    }, [startGame, playerOneName, playerTwoName]);
 
     const onKeyDown = useCallback((event: React.KeyboardEvent<HTMLInputElement>): void => {
         if (event.key === "Enter" && !disabled) {
-            navigate("/game");
+            startGame(playerOneName!, playerTwoName!);
         }
-    }, [navigate, disabled]);
+    }, [disabled]);
 
     function setError() {
         setPlayerOneErrorText("Player names must be different");

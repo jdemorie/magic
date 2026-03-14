@@ -1,10 +1,12 @@
 import {configureStore} from "@reduxjs/toolkit";
 import {magicSlice} from "./magicSlice";
+import {projectApi} from '../openapi/api';
 
 export const magicStore = configureStore({
     reducer: {
-        magic: magicSlice.reducer
+        magic: magicSlice.reducer,
+        [projectApi.reducerPath]: projectApi.reducer,
     },
     middleware: (getDefaultMiddleware) =>
-        getDefaultMiddleware(),
+        getDefaultMiddleware().concat(projectApi.middleware),
 });

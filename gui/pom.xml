@@ -22,6 +22,20 @@
         <version>3.1.0</version>
         <executions>
           <execution>
+            <id>npm-generate</id>
+            <phase>generate-sources</phase>
+            <configuration>
+              <target name="generate">
+                <exec executable="npm" dir="${project.basedir}/display" failonerror="true">
+                  <arg line="run generate"/>
+                </exec>
+              </target>
+            </configuration>
+            <goals>
+              <goal>run</goal>
+            </goals>
+          </execution>
+          <execution>
             <id>npm-install</id>
             <phase>compile</phase>
             <configuration>
