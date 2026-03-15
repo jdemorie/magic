@@ -29,7 +29,7 @@ export const useMagicPage = () => {
         if (event.key === "Enter" && !disabled) {
             startGame(playerOneName!, playerTwoName!);
         }
-    }, [disabled]);
+    }, [disabled, playerOneName, playerTwoName, startGame]);
 
     function setError() {
         setPlayerOneErrorText("Player names must be different");

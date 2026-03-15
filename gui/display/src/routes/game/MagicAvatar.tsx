@@ -3,7 +3,7 @@ import {Avatar, Badge} from "antd";
 
 interface MagicAvatarProps {
     src: string,
-    value: number,
+    value?: number,
     color?: string,
     testId: string,
 }

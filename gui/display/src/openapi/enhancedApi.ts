@@ -1,35 +1,69 @@
 import {projectApi} from "./api";
 
 type TagTypes =
-    | "getGameInformation"
-    | "getPlayerCard";
+    | "getPlayerHealthAndMana"
+    | "getActivePlayer"
+    | "getPlayerCards";
 
 export const enhancedApi = projectApi.enhanceEndpoints<
     TagTypes
 >({
     addTagTypes: [
-        "getGameInformation",
-        "getPlayerCard",
+        "getPlayerHealthAndMana",
+        "getPlayerCards",
+        "getActivePlayer"
     ],
     endpoints: {
-        getGameInformation: {
-            providesTags: (_, __, req) => [
-                {
-                    type: "getGameInformation",
-                },
-            ],
-        },
         startGame: {
             invalidatesTags: (_, __, req) => [
                 {
-                    type: "getGameInformation",
+                    type: "getPlayerCards",
+                },
+                {
+                    type: "getActivePlayer",
+                },
+                {
+                    type: "getPlayerHealthAndMana",
                 },
             ],
         },
-        getPlayerCard: {
+        getPlayerHealthAndMana: {
             providesTags: (_, __, req) => [
                 {
-                    type: "getPlayerCard",
+                    type: "getPlayerHealthAndMana",
+                },
+            ],
+        },
+        playCard: {
+            invalidatesTags: (_, __, req) => [
+                {
+                    type: "getPlayerHealthAndMana",
+                },
+                {
+                    type: "getPlayerCards",
+                    id: req.playerName
+                },
+            ],
+        },
+        getActivePlayer: {
+            providesTags: (_, __, req) => [
+                {
+                    type: "getActivePlayer",
+                },
+            ],
+        },
+        setActivePlayer: {
+            invalidatesTags: (_, __, req) => [
+                {
+                    type: "getActivePlayer",
+                },
+            ],
+        },
+        getPlayerCards: {
+            providesTags: (_, __, req) => [
+                {
+                    type: "getPlayerCards",
+                    id: req.playerName
                 },
             ],
         },
@@ -37,7 +71,10 @@ export const enhancedApi = projectApi.enhanceEndpoints<
 });
 
 export const {
-    useGetGameInformationQuery,
     useStartGameMutation,
-    useGetPlayerCardQuery
+    useGetPlayerHealthAndManaQuery,
+    usePlayCardMutation,
+    useGetActivePlayerQuery,
+    useSetActivePlayerMutation,
+    useGetPlayerCardsQuery,
 } = enhancedApi;

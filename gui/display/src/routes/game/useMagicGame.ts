@@ -1,51 +1,99 @@
 import {useNavigate} from "react-router";
-import React, {useCallback, useMemo} from "react";
+import {useCallback, useMemo} from "react";
 import {
-    useActivePlayer,
-    usePlayerOneCards,
-    usePlayerTwoCards,
-    useRemovePlayerOneCard,
-    useRemovePlayerTwoCard,
-    useSetActivePlayer
+    usePlayerOneName,
+    usePlayerOneSelectedCardIndex,
+    usePlayerTwoName,
+    usePlayerTwoSelectedCardIndex,
+    useSetPlayerOneSelectedCardIndex,
+    useSetPlayerTwoSelectedCardIndex
 } from "../../store/magicSlice";
+import {useGetActivePlayerQuery, usePlayCardMutation, useSetActivePlayerMutation} from "../../openapi/enhancedApi";
 
 export const useMagicGame = () => {
     const navigate = useNavigate();
-    const removePlayerOneCard = useRemovePlayerOneCard();
-    const removePlayerTwoCard = useRemovePlayerTwoCard();
-    const playerOneCards = usePlayerOneCards();
-    const playerTwoCards = usePlayerTwoCards();
-    const activePlayer = useActivePlayer();
-    const setActivePlayer = useSetActivePlayer();
+    const playerOneName = usePlayerOneName();
+    const playerTwoName = usePlayerTwoName();
+    const playerOneSelectedCardIndex = usePlayerOneSelectedCardIndex();
+    const playerTwoSelectedCardIndex = usePlayerTwoSelectedCardIndex();
+    const setPlayerOneSelectedCardIndex = useSetPlayerOneSelectedCardIndex();
+    const setPlayerTwoSelectedCardIndex = useSetPlayerTwoSelectedCardIndex();
+    const activePlayer = useGetActivePlayerQuery();
+    const [setActivePlayer] = useSetActivePlayerMutation();
+    const [playCard] = usePlayCardMutation();
 
-    const onBackButtonClick = useCallback((_: React.MouseEvent<HTMLElement> | undefined) => {
+    const onBackButtonClick = useCallback(() => {
         navigate("/magic");
     }, [navigate]);
 
-    const onPlayerOnePlay = useCallback((_: React.MouseEvent<HTMLButtonElement>) => {
-        const index = playerOneCards.findIndex(card => card.selected);
-        if (index !== -1) {
-            removePlayerOneCard(index);
+    const onPlayerOnePlay = useCallback((successCallback: () => void, errorCallback: (reason: any) => void) => {
+        if (playerOneSelectedCardIndex !== undefined) {
+            playCard({
+                playerName: playerOneName,
+                cardIndex: playerOneSelectedCardIndex
+            }).then(
+                (_) => {
+                    successCallback();
+                },
+                (reason) => {
+                    errorCallback(reason);
+                }
+            )
+            setPlayerOneSelectedCardIndex(undefined);
         }
-    }, [playerOneCards, removePlayerOneCard]);
+    }, [playerOneName, playCard, playerOneSelectedCardIndex, setPlayerOneSelectedCardIndex]);
 
-    const onPlayerOnePassed = useCallback((_: React.MouseEvent<HTMLButtonElement>) => {
-        setActivePlayer('PlayerTwo');
-    }, [setActivePlayer]);
+    const onPlayerOnePassed = useCallback((successCallback: () => void, errorCallback: (reason: any) => void) => {
+        setActivePlayer({
+            playerActiveBean: {
+                name: playerTwoName
+            }
+        }).then(
+            (_) => {
+                successCallback();
+            },
+            (reason) => {
+                errorCallback(reason);
+            })
+    }, [setActivePlayer, playerTwoName]);
 
-    const onPlayerTwoPlay = useCallback((_: React.MouseEvent<HTMLButtonElement>) => {
-        const index = playerTwoCards.findIndex(card => card.selected);
-        if (index !== -1) {
-            removePlayerTwoCard(index);
+    const onPlayerTwoPlay = useCallback((successCallback: () => void, errorCallback: (reason: any) => void) => {
+        if (playerTwoSelectedCardIndex !== undefined) {
+            playCard({
+                playerName: playerTwoName,
+                cardIndex: playerTwoSelectedCardIndex
+            }).then(
+                (_) => {
+                    successCallback();
+                },
+                (reason) => {
+                    errorCallback(reason);
+                }
+            )
+            setPlayerTwoSelectedCardIndex(undefined);
         }
-    }, [playerTwoCards, removePlayerTwoCard]);
+    }, [playerTwoName, playCard, playerTwoSelectedCardIndex, setPlayerTwoSelectedCardIndex]);
 
-    const onPlayerTwoPassed = useCallback((_: React.MouseEvent<HTMLButtonElement>) => {
-        setActivePlayer('PlayerOne');
-    }, [setActivePlayer]);
+    const onPlayerTwoPassed = useCallback((successCallback: () => void, errorCallback: (reason: any) => void) => {
+        setActivePlayer({
+            playerActiveBean: {
+                name: playerTwoName
+            }
+        }).then(
+            (_) => {
+                successCallback();
+            },
+            (reason) => {
+                errorCallback(reason);
+            })
+    }, [setActivePlayer, playerTwoName]);
 
-    const disabledPlayButtonForPlayerOne = useMemo(() => activePlayer !== 'PlayerOne', [activePlayer]);
-    const disabledPlayButtonForPlayerTwo = useMemo(() => activePlayer !== 'PlayerTwo', [activePlayer]);
+    const disabledPlayButtonForPlayerOne = useMemo(() => {
+        return activePlayer.data?.name !== playerOneName
+    }, [activePlayer, playerOneName]);
+    const disabledPlayButtonForPlayerTwo = useMemo(() => {
+        return activePlayer.data?.name !== playerTwoName
+    }, [activePlayer, playerTwoName]);
 
     return {
         onBackButtonClick,

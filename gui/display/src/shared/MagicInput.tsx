@@ -1,8 +1,9 @@
 import React, {FC} from "react";
 import styled from "styled-components";
-import {Input, Tooltip} from 'antd';
+import {Input, InputRef, Tooltip} from 'antd';
 
 interface MagicInputProps {
+    ref?: React.Ref<InputRef>,
     placeholder?: string,
     value?: string,
     error?: string,
@@ -21,11 +22,12 @@ const StyledInput = styled(Input)<{ $error?: boolean; }>`
     width: 20rem;
 `;
 
-export const MagicInput: FC<MagicInputProps> = ({placeholder, value, error, onInputChange, onInputKeyDown}) => {
+export const MagicInput: FC<MagicInputProps> = ({ref, placeholder, value, error, onInputChange, onInputKeyDown}) => {
     return (
         <StyledContainer>
             <Tooltip title={error} open={error !== undefined} placement="right">
-                <StyledInput type="text"
+                <StyledInput ref={ref}
+                             type="text"
                              value={value}
                              placeholder={placeholder}
                              onChange={onInputChange}

@@ -1,17 +1,11 @@
 import {Card} from "antd";
-import React, {FC, useCallback, useMemo} from "react";
-import {
-    usePlayerOneCards,
-    usePlayerOneName,
-    usePlayerTwoCards,
-    useSetPlayerOneSelectedCard,
-    useSetPlayerTwoSelectedCard
-} from "../../store/magicSlice";
+import React, {FC} from "react";
 import {testIds} from "../../shared/testIds";
+import {useMagicCard} from "./useMagicCard";
 
-interface MagicCardProps {
+export interface MagicCardProps {
     index: number,
-    mana: number,
+    mana: string,
     player: string,
     disabled?: boolean,
 }
@@ -19,31 +13,11 @@ interface MagicCardProps {
 const {Meta} = Card;
 
 export const MagicCard: FC<MagicCardProps> = ({index, mana, player, disabled}) => {
-    const playerOneName = usePlayerOneName();
-    const playerOneCards = usePlayerOneCards();
-    const playerTwoCards = usePlayerTwoCards();
-    const setPlayerOneSelectedCard = useSetPlayerOneSelectedCard();
-    const setPlayerTwoSelectedCard = useSetPlayerTwoSelectedCard();
-
-    const srcIcon = useMemo(() => {
-        const value = mana + 1;
-        return `/magic-card-${value}.png`;
-    }, [mana]);
-
-    const selected = useMemo(() => {
-        if (player === playerOneName) {
-            return playerOneCards[index]?.selected;
-        }
-        return playerTwoCards[index]?.selected;
-    }, [index, player, playerOneName, playerOneCards, playerTwoCards]);
-
-    const onClickDown = useCallback((_: React.MouseEvent<HTMLDivElement>) => {
-        if (player === playerOneName) {
-            setPlayerOneSelectedCard(index);
-        } else {
-            setPlayerTwoSelectedCard(index);
-        }
-    }, [index, player, playerOneName, setPlayerOneSelectedCard, setPlayerTwoSelectedCard]);
+    const {
+        srcIcon,
+        onClickDown,
+        selected
+    } = useMagicCard({index, mana, player});
 
     return (
         <div style={{

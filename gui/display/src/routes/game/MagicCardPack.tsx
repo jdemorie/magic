@@ -1,6 +1,7 @@
 import {FC, useMemo} from "react";
 import {MagicCard} from "./MagicCard";
-import {usePlayerOneCards, usePlayerOneName, usePlayerTwoCards} from "../../store/magicSlice";
+import {usePlayerOneName, usePlayerTwoName} from "../../store/magicSlice";
+import {useGetPlayerCardsQuery} from "../../openapi/enhancedApi";
 
 interface MagicCardPackProps {
     playerName: string,
@@ -9,13 +10,18 @@ interface MagicCardPackProps {
 
 export const MagicCardPack: FC<MagicCardPackProps> = ({playerName, disabled}) => {
     const playerOneName = usePlayerOneName();
-    const playerOneCards = usePlayerOneCards();
-    const playerTwoCards = usePlayerTwoCards();
+    const playerTwoName = usePlayerTwoName();
+    const playerOneCards = useGetPlayerCardsQuery({
+        playerName: playerOneName
+    });
+    const playerTwoCards = useGetPlayerCardsQuery({
+        playerName: playerTwoName
+    });
     const cards = useMemo(() => {
         if (playerName === playerOneName) {
-            return playerOneCards;
+            return playerOneCards.data;
         }
-        return playerTwoCards
+        return playerTwoCards.data;
     }, [playerName, playerOneName, playerOneCards, playerTwoCards]);
 
     return (
@@ -27,7 +33,7 @@ export const MagicCardPack: FC<MagicCardPackProps> = ({playerName, disabled}) =>
             gap: '1rem',
         }}>
             {
-                cards.map((card, index) => (
+                cards?.map((card, index) => (
                     <MagicCard key={index} mana={card.mana} index={index} player={playerName} disabled={disabled}/>
                 ))
             }

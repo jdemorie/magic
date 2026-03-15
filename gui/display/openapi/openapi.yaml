@@ -29,13 +29,79 @@ paths:
           $ref: "#/components/responses/NotFound"
         500:
           $ref: "#/components/responses/ServerError"
-  /server/game:
+  /server/game/player:
     get:
-      summary: "GET server/game"
-      operationId: "getGameInformation"
+      summary: "GET server/game/player"
+      operationId: "getPlayerHealthAndMana"
+      parameters:
+        - name: playerName
+          in: query
+          required: true
+          description: player name
+          schema:
+            type: string
       responses:
         200:
-          $ref: "#/components/schemas/GameBean"
+          description: "OK"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PlayerBean"
+        404:
+          $ref: "#/components/responses/NotFound"
+        500:
+          $ref: "#/components/responses/ServerError"
+  /server/game/player/active:
+    get:
+      summary: "GET server/game/player/active"
+      operationId: "getActivePlayer"
+      responses:
+        200:
+          description: "OK"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PlayerActiveBean"
+        404:
+          $ref: "#/components/responses/NotFound"
+        500:
+          $ref: "#/components/responses/ServerError"
+    put:
+      summary: "PUT server/game/player/active"
+      operationId: "setActivePlayer"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PlayerActiveBean"
+      responses:
+        200:
+          $ref: "#/components/responses/ServerResponse"
+        404:
+          $ref: "#/components/responses/NotFound"
+        500:
+          $ref: "#/components/responses/ServerError"
+  /server/game/player/play:
+    put:
+      summary: "POST server/game/player/play"
+      operationId: "playCard"
+      parameters:
+        - name: playerName
+          in: query
+          required: true
+          description: player name
+          schema:
+            type: string
+        - name: cardIndex
+          in: query
+          required: true
+          description: card index to play
+          schema:
+            type: number
+      responses:
+        200:
+          $ref: "#/components/responses/ServerResponse"
         404:
           $ref: "#/components/responses/NotFound"
         500:
@@ -43,7 +109,7 @@ paths:
   /server/game/card:
     get:
       summary: "GET server/game/card"
-      operationId: "getPlayerCard"
+      operationId: "getPlayerCards"
       parameters:
         - name: playerName
           in: query
@@ -99,24 +165,14 @@ components:
           description: "player mana slots"
       required:
         - name
-    GameBean:
+    PlayerActiveBean:
       type: object
       properties:
-        playerOne:
-          $ref: "#/components/schemas/PlayerBean"
-        playerOneCards:
-          type: array
-          items:
-            $ref: "#/components/schemas/DamageCardBean"
-        playerTwo:
-          $ref: "#/components/schemas/PlayerBean"
-        playerTwoCards:
-          type: array
-          items:
-            $ref: "#/components/schemas/DamageCardBean"
+        name:
+          type: string
+          description: "active player name"
       required:
-        - player1
-        - player2
+        - name
     DamageCardBean:
       type: object
       properties:

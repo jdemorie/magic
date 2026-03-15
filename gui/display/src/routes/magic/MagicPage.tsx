@@ -1,4 +1,4 @@
-import React, {FC} from "react";
+import React, {FC, useEffect, useRef} from "react";
 import {StyledTypography} from "../../shared/SharedStyles";
 import {usePlayerOneName, usePlayerTwoName} from "../../store/magicSlice";
 import {MagicInput} from "../../shared/MagicInput";
@@ -6,6 +6,7 @@ import {useMagicPage} from "./useMagicPage";
 import styled from "styled-components";
 import {motion} from "motion/react";
 import {MagicButton} from "../../shared/MagicButton";
+import {InputRef} from "antd";
 
 const BackgroundContainer = styled(motion.div)`
     height: 100vh;
@@ -30,6 +31,13 @@ export const MagicPage: FC = () => {
         onKeyDown,
         disabled
     } = useMagicPage();
+    const inputRef = useRef<InputRef>(null);
+
+    useEffect(() => {
+        if (inputRef.current) {
+            inputRef.current.focus();
+        }
+    }, []);
 
     return (
         <BackgroundContainer initial={{opacity: 0}} animate={{
@@ -52,7 +60,8 @@ export const MagicPage: FC = () => {
                 gridRow: '2 / 2',
                 gap: '1rem',
             }}>
-                <MagicInput value={playerOneName}
+                <MagicInput ref={inputRef}
+                            value={playerOneName}
                             onInputChange={onPlayerOneNameChange}
                             onInputKeyDown={onKeyDown}
                             placeholder="Enter name for player one"
