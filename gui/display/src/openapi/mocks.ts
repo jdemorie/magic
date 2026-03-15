@@ -9,13 +9,16 @@ import {
 } from "./enhancedApi";
 
 export function mockUsePlayCardMutation() {
-    const mockMutation = jest.fn().mockImplementation(() =>
-        Promise.resolve({
-            data: {
-                message: `Card played successfully!`
-            },
-        }),
-    );
+    const promiseWithUnwrap = {
+        unwrap: () => {
+            return Promise.resolve({
+                data: {
+                    message: "Card played successfully",
+                },
+            });
+        },
+    };
+    const mockMutation = jest.fn().mockImplementation(() => promiseWithUnwrap);
     (usePlayCardMutation as jest.Mock).mockReturnValue([mockMutation]);
 }
 
@@ -48,14 +51,26 @@ export function mockUseGetActivePlayerQuery(playerName: string) {
 }
 
 export function mockUseSetActivePlayerMutation(playerName: string) {
-    const mockMutation = jest.fn().mockImplementation(() =>
-        Promise.resolve({
-            data: {
-                message: `Active player set to ${playerName} successfully!`
-            },
-        }),
-    );
+    const promiseWithUnwrap = {
+        unwrap: () => {
+            return Promise.resolve({
+                data: {
+                    message: `Active player set to ${playerName} successfully!`,
+                },
+            });
+        },
+    };
+    const mockMutation = jest.fn().mockImplementation(() => promiseWithUnwrap);
     (useSetActivePlayerMutation as jest.Mock).mockReturnValue([mockMutation]);
+}
+
+export function expectSetActivePlayerCalledWith(player: string) {
+    const mockMutation = (useSetActivePlayerMutation as jest.Mock).mock.results[0].value[0];
+    expect(mockMutation).toHaveBeenCalledWith({
+        playerActiveBean: {
+            name: player,
+        },
+    });
 }
 
 export function reset() {

@@ -21,7 +21,7 @@ export const useMagicPage = () => {
         }
     }, [playerOneName, playerTwoName, isStartSuccess, navigate]);
 
-    const onStart = useCallback((_: React.MouseEvent<HTMLButtonElement>): void => {
+    const onStart = useCallback((): void => {
         startGame(playerOneName!, playerTwoName!);
     }, [startGame, playerOneName, playerTwoName]);
 

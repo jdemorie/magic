@@ -31,14 +31,12 @@ export const useMagicGame = () => {
             playCard({
                 playerName: playerOneName,
                 cardIndex: playerOneSelectedCardIndex
-            }).then(
-                (_) => {
-                    successCallback();
-                },
-                (reason) => {
-                    errorCallback(reason);
-                }
-            )
+            }).unwrap().then((res) => {
+                successCallback();
+            }).catch((reason) => {
+                const {message} = reason.data;
+                errorCallback(message || "Failed to play card");
+            })
             setPlayerOneSelectedCardIndex(undefined);
         }
     }, [playerOneName, playCard, playerOneSelectedCardIndex, setPlayerOneSelectedCardIndex]);
@@ -48,13 +46,12 @@ export const useMagicGame = () => {
             playerActiveBean: {
                 name: playerTwoName
             }
-        }).then(
-            (_) => {
-                successCallback();
-            },
-            (reason) => {
-                errorCallback(reason);
-            })
+        }).unwrap().then((res) => {
+            successCallback();
+        }).catch((reason) => {
+            const {message} = reason.data;
+            errorCallback(message || "Failed to pass the turn");
+        })
     }, [setActivePlayer, playerTwoName]);
 
     const onPlayerTwoPlay = useCallback((successCallback: () => void, errorCallback: (reason: any) => void) => {
@@ -62,14 +59,12 @@ export const useMagicGame = () => {
             playCard({
                 playerName: playerTwoName,
                 cardIndex: playerTwoSelectedCardIndex
-            }).then(
-                (_) => {
-                    successCallback();
-                },
-                (reason) => {
-                    errorCallback(reason);
-                }
-            )
+            }).unwrap().then((res) => {
+                successCallback();
+            }).catch((reason) => {
+                const {message} = reason.data;
+                errorCallback(message || "Failed to play card");
+            })
             setPlayerTwoSelectedCardIndex(undefined);
         }
     }, [playerTwoName, playCard, playerTwoSelectedCardIndex, setPlayerTwoSelectedCardIndex]);
@@ -77,20 +72,20 @@ export const useMagicGame = () => {
     const onPlayerTwoPassed = useCallback((successCallback: () => void, errorCallback: (reason: any) => void) => {
         setActivePlayer({
             playerActiveBean: {
-                name: playerTwoName
+                name: playerOneName
             }
-        }).then(
-            (_) => {
-                successCallback();
-            },
-            (reason) => {
-                errorCallback(reason);
-            })
-    }, [setActivePlayer, playerTwoName]);
+        }).unwrap().then((res) => {
+            successCallback();
+        }).catch((reason) => {
+            const {message} = reason.data;
+            errorCallback(message || "Failed to pass the turn");
+        })
+    }, [setActivePlayer, playerOneName]);
 
     const disabledPlayButtonForPlayerOne = useMemo(() => {
         return activePlayer.data?.name !== playerOneName
     }, [activePlayer, playerOneName]);
+    
     const disabledPlayButtonForPlayerTwo = useMemo(() => {
         return activePlayer.data?.name !== playerTwoName
     }, [activePlayer, playerTwoName]);

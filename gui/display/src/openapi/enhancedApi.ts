@@ -57,6 +57,9 @@ export const enhancedApi = projectApi.enhanceEndpoints<
                 {
                     type: "getActivePlayer",
                 },
+                {
+                    type: "getPlayerHealthAndMana",
+                },
             ],
         },
         getPlayerCards: {

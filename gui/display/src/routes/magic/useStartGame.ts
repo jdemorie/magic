@@ -11,18 +11,14 @@ export const useStartGame = () => {
             start({
                 playerOneName: playerOneName,
                 playerTwoName: playerTwoName,
-            })
-                .then(
-                    (_) => {
-                        setStartSuccess(true);
-                    },
-                    (reason) => {
-                        setStartSuccess(false);
-                    },
-                )
-                .finally(() => {
-                    setGameStart(false);
-                });
+            }).unwrap().then((_) => {
+                    setStartSuccess(true);
+                }
+            ).catch((reason) => {
+                setStartSuccess(false);
+            }).finally(() => {
+                setGameStart(false);
+            });
         },
         [start],
     );

@@ -1,8 +1,7 @@
 import express from "express";
 import cors from "cors";
 import {server as mockServer} from "./server.js";
-import playerOneCards from "./card.json" with {type: "json"};
-import playerTwoCards from "./card.json" with {type: "json"};
+import cards from "./card.json" with {type: "json"};
 
 mockServer.listen();
 
@@ -13,20 +12,21 @@ app.use(express.json());
 let playerOneName = "";
 let playerTwoName = "";
 let activePlayer = "";
-let currentPlayerOneCards = playerOneCards;
-let currentPlayerTwoCards = playerTwoCards;
+let currentPlayerOneCards = [...cards];
+let currentPlayerTwoCards = [...cards];
 let playerOneHealth = 20;
 let playerTwoHealth = 20;
 let playerOneManaSlots = 0;
 let playerTwoManaSlots = 0;
 
 app.post('/server/start', (req, res) => {
-    const p1 = req.query.playerOneName;
-    const p2 = req.query.playerTwoName;
-    playerOneName = p1;
-    playerTwoName = p2;
-    activePlayer = playerOneName;
     setTimeout(() => {
+        const p1 = req.query.playerOneName;
+        const p2 = req.query.playerTwoName;
+        playerOneName = p1;
+        playerTwoName = p2;
+        activePlayer = playerOneName;
+        playerOneManaSlots = 10;
         res.json({message: 'Game started'});
     }, 100);
 });
@@ -37,15 +37,20 @@ app.put('/server/game/player/play', (req, res) => {
     if (playerName === playerOneName) {
         if (cardIndex >= 0 && cardIndex < currentPlayerOneCards.length) {
             const mana = currentPlayerOneCards[cardIndex].mana;
-            playerTwoHealth -= mana;
+            if (playerOneManaSlots < mana) {
+                return res.status(400).json({message: 'Not enough mana'});
+            }
+            playerTwoHealth = Math.max(playerTwoHealth - mana, 0);
             playerOneManaSlots -= mana;
             currentPlayerOneCards.splice(cardIndex, 1);
         }
-    }
-    if (playerName === playerTwoName) {
+    } else if (playerName === playerTwoName) {
         if (cardIndex >= 0 && cardIndex < currentPlayerTwoCards.length) {
             const mana = currentPlayerTwoCards[cardIndex].mana;
-            playerOneHealth -= mana;
+            if (playerTwoManaSlots < mana) {
+                return res.status(400).json({message: 'Not enough mana'});
+            }
+            playerOneHealth = Math.max(playerOneHealth - mana, 0);
             playerTwoManaSlots -= mana;
             currentPlayerTwoCards.splice(cardIndex, 1);
         }
@@ -73,8 +78,14 @@ app.get('/server/game/player/active', (req, res) => {
 });
 
 app.put('/server/game/player/active', (req, res) => {
-    activePlayer = activePlayer === playerOneName ? playerTwoName : playerOneName;
     setTimeout(async () => {
+        if (activePlayer === playerOneName) {
+            activePlayer = playerTwoName;
+            playerTwoManaSlots = playerTwoManaSlots === 0 ? 10 : Math.min(playerTwoManaSlots + 1, 10);
+        } else {
+            activePlayer = playerOneName;
+            playerOneManaSlots = playerOneManaSlots === 0 ? 10 : Math.min(playerOneManaSlots + 1, 10);
+        }
         res.json({message: 'Active player switched'});
     }, 100);
 });

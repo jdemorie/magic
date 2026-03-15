@@ -25,6 +25,8 @@ paths:
       responses:
         200:
           $ref: "#/components/responses/ServerResponse"
+        400:
+          $ref: "#/components/responses/BadRequest"
         404:
           $ref: "#/components/responses/NotFound"
         500:
@@ -47,6 +49,8 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/PlayerBean"
+        400:
+          $ref: "#/components/responses/BadRequest"
         404:
           $ref: "#/components/responses/NotFound"
         500:
@@ -62,6 +66,8 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/PlayerActiveBean"
+        400:
+          $ref: "#/components/responses/BadRequest"
         404:
           $ref: "#/components/responses/NotFound"
         500:
@@ -78,6 +84,8 @@ paths:
       responses:
         200:
           $ref: "#/components/responses/ServerResponse"
+        400:
+          $ref: "#/components/responses/BadRequest"
         404:
           $ref: "#/components/responses/NotFound"
         500:
@@ -102,6 +110,8 @@ paths:
       responses:
         200:
           $ref: "#/components/responses/ServerResponse"
+        400:
+          $ref: "#/components/responses/BadRequest"
         404:
           $ref: "#/components/responses/NotFound"
         500:
@@ -126,6 +136,8 @@ paths:
                 type: "array"
                 items:
                   $ref: "#/components/schemas/DamageCardBean"
+        400:
+          $ref: "#/components/responses/BadRequest"
         404:
           $ref: "#/components/responses/NotFound"
         500:
@@ -138,6 +150,12 @@ components:
         application/json:
           schema:
             $ref: "#/components/schemas/ResponseBean"
+    BadRequest:
+      description: Not found
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/BadRequestBean"
     NotFound:
       description: Not found
       content:
@@ -187,6 +205,14 @@ components:
         message:
           type: string
           description: "Response message"
+      required:
+        - message
+    BadRequestBean:
+      type: object
+      properties:
+        message:
+          type: string
+          description: "Bad request message"
       required:
         - message
     ErrorBean:

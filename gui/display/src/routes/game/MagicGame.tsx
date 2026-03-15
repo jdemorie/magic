@@ -103,8 +103,7 @@ export const MagicGame = () => {
 
     const openErrorNotification = useCallback((reason: string) => {
         api.error({
-            title: `Something wrong happen`,
-            description: reason,
+            title: reason,
             placement: "bottomLeft"
         });
     }, [api]);
@@ -136,7 +135,7 @@ export const MagicGame = () => {
                                  testId={testIds.passButtonForPlayerOne}
                                  disabled={disabledPlayButtonForPlayerOne}
                                  src="/passed.png"
-                                 tooltipText="Passed"/>
+                                 tooltipText="Pass your turn"/>
                 </GridDiv>
                 <CardDiv $column="2 / 4" $row="2 / 2">
                     <MagicCardPack playerName={playerOneName}
@@ -166,7 +165,7 @@ export const MagicGame = () => {
                                  testId={testIds.passButtonForPlayerTwo}
                                  disabled={disabledPlayButtonForPlayerTwo}
                                  src="/passed.png"
-                                 tooltipText="Passed"/>
+                                 tooltipText="Pass your turn"/>
                 </GridDiv>
                 <GridDiv $column="1 / 1" $row="1 / 5">
                     <MagicExitButton/>
