@@ -14,6 +14,7 @@ import {
     mockUseGetPlayerCardsQuery,
     mockUseGetPlayerHealthAndManaQuery,
     mockUsePlayCardMutation,
+    mockUsePlayCardMutationWithError,
     mockUseSetActivePlayerMutation,
     reset
 } from "../../../openapi/mocks";
@@ -291,6 +292,39 @@ describe('MagicGame component', () => {
             userEvent.click(pass);
         });
         expectSetActivePlayerCalledWith("Player One");
+    });
+
+    it('should handle error when player plays a card', async () => {
+        mockUsePlayCardMutationWithError();
+        mockUseGetPlayerHealthAndManaQuery(initialPlayerOneHealthAndMana, initialPlayerTwoHealthAndMana);
+        mockUseGetActivePlayerQuery("Player One");
+        mockUseSetActivePlayerMutation("Player Two");
+        mockUseGetPlayerCardsQuery(initialDamageCard);
+        render(
+            <Provider store={magicStore}>
+                <MemoryRouter>
+                    <MagicGame/>
+                </MemoryRouter>
+            </Provider>
+        );
+        act(() => {
+            magicStore.dispatch(setPlayerOneName("Player One"));
+            magicStore.dispatch(setPlayerTwoName("Player Two"));
+        });
+        const card = await screen.findByTestId(`${testIds.card}-Player One-0-3`);
+        expect(card).toBeInTheDocument();
+        act(() => {
+            userEvent.click(card);
+        });
+        const playerOnePlay = await screen.findByTestId(`${testIds.playButtonForPlayerOne}`);
+        expect(playerOnePlay).toBeInTheDocument();
+        expect(playerOnePlay).toBeEnabled();
+        act(() => {
+            userEvent.click(playerOnePlay);
+        });
+        const playerTwoPlay = await screen.findByTestId(`${testIds.playButtonForPlayerTwo}`);
+        expect(playerTwoPlay).toBeInTheDocument();
+        expect(playerTwoPlay).toBeDisabled();
     });
 
 });

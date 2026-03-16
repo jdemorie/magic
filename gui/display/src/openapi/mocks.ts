@@ -22,6 +22,21 @@ export function mockUsePlayCardMutation() {
     (usePlayCardMutation as jest.Mock).mockReturnValue([mockMutation]);
 }
 
+export function mockUsePlayCardMutationWithError() {
+    const error = {
+        data: {
+            message: "An error occurred while playing the card",
+        },
+    }
+    const promiseWithUnwrap = {
+        unwrap: () => {
+            return Promise.reject(error);
+        },
+    };
+    const mockMutation = jest.fn().mockImplementation(() => promiseWithUnwrap);
+    (usePlayCardMutation as jest.Mock).mockReturnValue([mockMutation]);
+}
+
 export function expectPlayCardCalledWith(playerName: string, cardIndex: number) {
     const mockMutation = (usePlayCardMutation as jest.Mock).mock.results[0].value[0];
     expect(mockMutation).toHaveBeenCalledWith({
