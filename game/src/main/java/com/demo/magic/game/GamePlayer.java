@@ -50,8 +50,12 @@ public final class GamePlayer {
   }
 
   public void plays(GameDamageCard damageCard) {
+    int manaCost = damageCard.manaCost();
+    if (manaCost > manaSlot.value()) {
+      throw new GameNotEnoughManaException("Player " + name + " does not have enough mana slot to play the card.");
+    }
     damageCardPack.remove(damageCard);
-    manaSlot.decrement(damageCard.manaCost());
+    manaSlot.decrement(manaCost);
   }
 
   public void receivesDamage(GameDamageCard damageCard) {

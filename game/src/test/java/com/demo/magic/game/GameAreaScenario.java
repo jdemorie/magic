@@ -26,7 +26,7 @@ public class GameAreaScenario {
     game.activePlayer(player);
     return this;
   }
-  
+
   public GameAreaScenario whenPlayerPassHisTurn(String player) {
     game.activePlayerPassHisTurn(player);
     return this;
@@ -64,6 +64,12 @@ public class GameAreaScenario {
 
   public GameAreaScenario thenPlayerShouldBeActive(String player) {
     assertEquals(player, game.getActivePlayer().name());
+    return this;
+  }
+
+  public GameAreaScenario thenErrorShouldBeThrownIfActivePlayerPlaysAManaCard(GameDamageCard damageCard, String expectedMessage) {
+    GameNotEnoughManaException exception = assertThrows(GameNotEnoughManaException.class, () -> game.activePlayerPlaysAManaCard(damageCard));
+    assertEquals(expectedMessage, exception.getMessage());
     return this;
   }
 }

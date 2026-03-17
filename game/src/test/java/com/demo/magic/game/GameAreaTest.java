@@ -121,4 +121,15 @@ public class GameAreaTest {
         .whenPlayerPassHisTurn("Alice")
         .thenPlayerShouldBeActive("Bob");
   }
+
+  @Test
+  void givenAGameWhenActivePlayerPlaysCardWithManaCostHigherThanHisManaSlotThenPlayerShouldNotPlayTheCard() {
+    GameAreaScenario scenario = new GameAreaScenario();
+    scenario.givenAGameWithPlayers("Alice", "Bob")
+        .whenGameStarts()
+        .whenPlayerBecomeActive("Alice")
+        .whenActivePlayerPlaysAManaCard(new GameDamageCard(8))
+        .thenPlayerShouldHaveManaSlot("Alice", new GameManaSlot(2))
+        .thenErrorShouldBeThrownIfActivePlayerPlaysAManaCard(new GameDamageCard(3), "Player Alice does not have enough mana slot to play the card.");
+  }
 }
