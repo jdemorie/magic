@@ -72,4 +72,10 @@ public class GameAreaScenario {
     assertEquals(expectedMessage, exception.getMessage());
     return this;
   }
+
+  public GameAreaScenario thenErrorShouldBeThrownIfPlayerBecomesActive(String player, String expectedMessage) {
+    GameWinnerException exception = assertThrows(GameWinnerException.class, () -> game.activePlayer(player));
+    assertEquals(expectedMessage, exception.getMessage());
+    return this;
+  }
 }

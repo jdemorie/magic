@@ -132,4 +132,44 @@ public class GameAreaTest {
         .thenPlayerShouldHaveManaSlot("Alice", new GameManaSlot(2))
         .thenErrorShouldBeThrownIfActivePlayerPlaysAManaCard(new GameDamageCard(3), "Player Alice does not have enough mana slot to play the card.");
   }
+
+  @Test
+  void givenAGameWhenPlayerTwoHasNoHealthThenHeCannotBeActiveAnyMore() {
+    GameAreaScenario scenario = new GameAreaScenario();
+    scenario.givenAGameWithPlayers("Alice", "Bob")
+        .whenGameStarts()
+        .whenPlayerBecomeActive("Alice")
+        .whenActivePlayerPlaysAManaCard(new GameDamageCard(8))
+        .whenActivePlayerPlaysAManaCard(new GameDamageCard(2))
+        .whenPlayerBecomeActive("Bob")
+        .whenPlayerBecomeActive("Alice")
+        .whenActivePlayerPlaysAManaCard(new GameDamageCard(7))
+        .whenActivePlayerPlaysAManaCard(new GameDamageCard(3))
+        .whenPlayerBecomeActive("Bob")
+        .whenPlayerBecomeActive("Alice")
+        .whenActivePlayerPlaysAManaCard(new GameDamageCard(6))
+        .whenActivePlayerPlaysAManaCardAndWinTheGame(new GameDamageCard(4))
+        .thenPlayerShouldHaveHealth("Bob", new GameHealth(0))
+        .thenErrorShouldBeThrownIfPlayerBecomesActive("Bob", "Player Bob has no health left, cannot be active.");
+  }
+
+  @Test
+  void givenAGameWhenPlayerOneHasNoHealthThenHeCannotBeActiveAnyMore() {
+    GameAreaScenario scenario = new GameAreaScenario();
+    scenario.givenAGameWithPlayers("Alice", "Bob")
+        .whenGameStarts()
+        .whenPlayerBecomeActive("Bob")
+        .whenActivePlayerPlaysAManaCard(new GameDamageCard(8))
+        .whenActivePlayerPlaysAManaCard(new GameDamageCard(2))
+        .whenPlayerBecomeActive("Alice")
+        .whenPlayerBecomeActive("Bob")
+        .whenActivePlayerPlaysAManaCard(new GameDamageCard(7))
+        .whenActivePlayerPlaysAManaCard(new GameDamageCard(3))
+        .whenPlayerBecomeActive("Alice")
+        .whenPlayerBecomeActive("Bob")
+        .whenActivePlayerPlaysAManaCard(new GameDamageCard(6))
+        .whenActivePlayerPlaysAManaCardAndWinTheGame(new GameDamageCard(4))
+        .thenPlayerShouldHaveHealth("Alice", new GameHealth(0))
+        .thenErrorShouldBeThrownIfPlayerBecomesActive("Alice", "Player Alice has no health left, cannot be active.");
+  }
 }

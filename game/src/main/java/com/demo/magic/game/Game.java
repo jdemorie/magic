@@ -28,11 +28,13 @@ public final class Game {
       return;
     }
     if (firstPlayer.name().equals(player)) {
+      checkHealthAndThrowsError(firstPlayer);
       firstPlayer.active(true);
       desk.giveManaSlotToActivePlayer(firstPlayer);
       desk.giveDamageCardsToPlayer(firstPlayer, 1);
       secondPlayer.active(false);
     } else {
+      checkHealthAndThrowsError(secondPlayer);
       secondPlayer.active(true);
       desk.giveManaSlotToActivePlayer(secondPlayer);
       desk.giveDamageCardsToPlayer(secondPlayer, 1);
@@ -78,5 +80,12 @@ public final class Game {
       return firstPlayer;
     }
     return secondPlayer;
+  }
+
+  private void checkHealthAndThrowsError(GamePlayer player) {
+    GameHealth health = player.health();
+    if (health.value() <= 0) {
+      throw new GameWinnerException("Player " + player.name() + " has no health left, cannot be active.");
+    }
   }
 }
