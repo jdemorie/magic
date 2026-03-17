@@ -21,6 +21,8 @@ public class MagicApplicationControllerTest {
     scenario.givenAMagicServer()
         .whenIStartGame("Bob", "Alice")
         .thenPlayerShouldHaveHealthAndMana("Alice", 30, 0)
-        .thenPlayerShouldHaveHealthAndMana("Bob", 30, 10);
+        .thenPlayerShouldHaveHealthAndMana("Bob", 30, 10)
+        .thenPlayerShouldHaveDamageCards("Alice", 23)
+        .thenPlayerShouldHaveDamageCards("Bob", 24);
   }
 }

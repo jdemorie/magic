@@ -1,5 +1,6 @@
 package com.demo.magic.server;
 
+import com.demo.magic.server.model.DamageCardBean;
 import com.demo.magic.server.model.PlayerBean;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.http.client.HttpClient;
@@ -35,6 +36,14 @@ public class MagicApplicationScenario {
     assertNotNull(response);
     assertEquals(expectedHealth, response.getHealth());
     assertEquals(expectedMana, response.getManaSlots());
+    return this;
+  }
+
+  public MagicApplicationScenario thenPlayerShouldHaveDamageCards(String player, int expectedNumberOfCard) {
+    HttpRequest<?> request = HttpRequest.GET("/server/game/player/card?playerName=" + player);
+    DamageCardBean[] response = client.toBlocking().retrieve(request, DamageCardBean[].class);
+    assertNotNull(response);
+    assertEquals(expectedNumberOfCard, response.length);
     return this;
   }
 }

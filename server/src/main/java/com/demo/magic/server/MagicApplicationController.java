@@ -87,6 +87,8 @@ public class MagicApplicationController implements DefaultApi {
     GameArea gameArea = new GameArea(new GamePlayer(playerOneName), new GamePlayer(playerTwoName));
     game = gameArea.start();
     game.activePlayer(playerOneName);
+    game.giveDamageCardsToPlayer(playerOneName, 3);
+    game.giveDamageCardsToPlayer(playerTwoName, 3);
     @Valid ResponseBean responseBean = new ResponseBean("Game started with players: " + playerOneName + " and " + playerTwoName);
     return Mono.just(responseBean);
   }

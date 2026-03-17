@@ -1,4 +1,4 @@
-import React, {useEffect} from "react";
+import React, {useEffect, useState} from "react";
 import {StyledTypography} from "../../shared/SharedStyles";
 import styled from "styled-components";
 import {useMagicGame} from "./useMagicGame";
@@ -12,6 +12,7 @@ import {MagicButton} from "../../shared/MagicButton";
 import {useGetPlayerHealthAndManaQuery} from "../../openapi/enhancedApi";
 import {useMessageNotification} from "../../store/useMessageNotification";
 import {MagicCardNumber} from "./MagicCardNumber";
+import {MagicWinnerModal} from "./MagicWinnerModal";
 
 const BackgroundContainer = styled(motion.div)`
     height: 100vh;
@@ -59,6 +60,7 @@ export const MagicGame = () => {
         playerName: playerTwoName
     });
     const {contextHolder, sendNotification, notificationState} = useMessageNotification();
+    const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
 
     const {
         onPlayerOnePlay,
@@ -66,14 +68,22 @@ export const MagicGame = () => {
         onPlayerOnePassed,
         onPlayerTwoPassed,
         disabledPlayButtonForPlayerOne,
-        disabledPlayButtonForPlayerTwo
+        disabledPlayButtonForPlayerTwo,
+        winnerName,
     } = useMagicGame();
 
     useEffect(() => {
         if (notificationState) {
             sendNotification(notificationState.message, notificationState.type);
         }
-    }, [notificationState, sendNotification]);
+        if (winnerName) {
+            setIsModalOpen(true);
+        }
+    }, [notificationState, sendNotification, winnerName]);
+
+    const closeModalMessage = () => {
+        setIsModalOpen(false);
+    };
 
     return (
         <>
@@ -144,6 +154,7 @@ export const MagicGame = () => {
                     <MagicExitButton/>
                 </GridDiv>
             </BackgroundContainer>
+            <MagicWinnerModal isModalOpen={isModalOpen} handleOk={closeModalMessage} winner={winnerName}/>
         </>
     )
 }

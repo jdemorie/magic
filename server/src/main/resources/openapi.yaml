@@ -155,7 +155,7 @@ components:
       content:
         application/json:
           schema:
-            $ref: "#/components/schemas/BadRequestBean"
+            $ref: "#/components/schemas/ErrorBean"
     NotFound:
       description: Not found
       content:
@@ -207,20 +207,25 @@ components:
           description: "Response message"
       required:
         - message
-    BadRequestBean:
-      type: object
-      properties:
-        message:
-          type: string
-          description: "Bad request message"
-      required:
-        - message
     ErrorBean:
       type: object
       properties:
+        errorCode:
+          type: integer
+          description: "Error code, same value as the HTTP status, or dedicated values for some specific errors."
+          enum:
+            - 400
+            - 404
+            - 500
+            - 1401
+          x-enum-varnames:
+            - BAD_PARAMETER
+            - NOT_FOUND
+            - INTERNAL_ERROR
+            - GAME_OVER
         message:
           type: string
           description: "Error message"
       required:
-        - code
+        - errorCode
         - message

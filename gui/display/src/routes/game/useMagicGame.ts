@@ -1,5 +1,5 @@
 import {useNavigate} from "react-router";
-import {useCallback, useMemo} from "react";
+import {useCallback, useMemo, useState} from "react";
 import {
     usePlayerOneName,
     usePlayerOneSelectedCardIndex,
@@ -24,6 +24,7 @@ export const useMagicGame = () => {
     const [setActivePlayer] = useSetActivePlayerMutation();
     const [playCard] = usePlayCardMutation();
     const {setNotificationState} = useMessageNotification();
+    const [winnerName, setWinnerName] = useState<string>();
 
     const onBackButtonClick = useCallback(() => {
         navigate("/magic");
@@ -37,12 +38,16 @@ export const useMagicGame = () => {
             }).unwrap().then((_) => {
                 setNotificationState("You played a card", NotificationType.Info);
             }).catch((reason) => {
-                const {message} = reason.data;
-                setNotificationState(message || "Failed to play card", NotificationType.Error);
+                const {message, errorCode} = reason.data;
+                if (errorCode === 1401) {
+                    setWinnerName(playerOneName);
+                } else {
+                    setNotificationState(message || "Failed to play card", NotificationType.Error);
+                }
             })
             setPlayerOneSelectedCardIndex(undefined);
         }
-    }, [playerOneName, playCard, playerOneSelectedCardIndex, setPlayerOneSelectedCardIndex, setNotificationState]);
+    }, [playerOneName, playCard, playerOneSelectedCardIndex, setPlayerOneSelectedCardIndex, setNotificationState, setWinnerName]);
 
     const onPlayerOnePassed = useCallback(() => {
         setActivePlayer({
@@ -65,12 +70,16 @@ export const useMagicGame = () => {
             }).unwrap().then((_) => {
                 setNotificationState("You played a card", NotificationType.Info);
             }).catch((reason) => {
-                const {message} = reason.data;
-                setNotificationState(message || "Failed to play card", NotificationType.Error);
+                const {message, errorCode} = reason.data;
+                if (errorCode === 1401) {
+                    setWinnerName(playerTwoName);
+                } else {
+                    setNotificationState(message || "Failed to play card", NotificationType.Error);
+                }
             })
             setPlayerTwoSelectedCardIndex(undefined);
         }
-    }, [playerTwoName, playCard, playerTwoSelectedCardIndex, setPlayerTwoSelectedCardIndex, setNotificationState]);
+    }, [playerTwoName, playCard, playerTwoSelectedCardIndex, setPlayerTwoSelectedCardIndex, setNotificationState, setWinnerName]);
 
     const onPlayerTwoPassed = useCallback(() => {
         setActivePlayer({
@@ -100,6 +109,8 @@ export const useMagicGame = () => {
         onPlayerOnePassed,
         onPlayerTwoPassed,
         disabledPlayButtonForPlayerOne,
-        disabledPlayButtonForPlayerTwo
+        disabledPlayButtonForPlayerTwo,
+        winnerName,
+        setWinnerName,
     }
 }

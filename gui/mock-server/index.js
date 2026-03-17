@@ -14,8 +14,8 @@ let playerTwoName = "";
 let activePlayer = "";
 let currentPlayerOneCards = [...cards];
 let currentPlayerTwoCards = [...cards];
-let playerOneHealth = 20;
-let playerTwoHealth = 20;
+let playerOneHealth = 10;
+let playerTwoHealth = 10;
 let playerOneManaSlots = 0;
 let playerTwoManaSlots = 0;
 
@@ -41,6 +41,9 @@ app.put('/server/game/player/play', (req, res) => {
                 return res.status(400).json({message: 'Not enough mana'});
             }
             playerTwoHealth = Math.max(playerTwoHealth - mana, 0);
+            if (playerTwoHealth === 0) {
+                return res.status(500).json({message: `${playerOneName} wins!`, errorCode: 1401});
+            }
             playerOneManaSlots -= mana;
             currentPlayerOneCards.splice(cardIndex, 1);
         }
@@ -51,6 +54,9 @@ app.put('/server/game/player/play', (req, res) => {
                 return res.status(400).json({message: 'Not enough mana'});
             }
             playerOneHealth = Math.max(playerOneHealth - mana, 0);
+            if (playerOneHealth === 0) {
+                return res.status(500).json({message: `${playerTwoName} wins!`});
+            }
             playerTwoManaSlots -= mana;
             currentPlayerTwoCards.splice(cardIndex, 1);
         }
