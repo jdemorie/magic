@@ -11,6 +11,7 @@ import {MagicExitButton} from "./MagicExitButton";
 import {MagicButton} from "../../shared/MagicButton";
 import {useGetPlayerHealthAndManaQuery} from "../../openapi/enhancedApi";
 import {useMessageNotification} from "../../store/useMessageNotification";
+import {MagicCardNumber} from "./MagicCardNumber";
 
 const BackgroundContainer = styled(motion.div)`
     height: 100vh;
@@ -41,6 +42,11 @@ const CardDiv = styled.div<{ $column?: string; $row?: string }>`
     overflow-x: auto;
     max-width: 100%;
     max-height: 80%;
+`;
+
+const CardNumberDiv = styled.div<{ $column?: string; $row?: string }>`
+    grid-column: ${props => props.$column ? props.$column : '1 / 1'};
+    grid-row: ${props => props.$row ? props.$row : '1 / 1'};
 `;
 
 export const MagicGame = () => {
@@ -102,10 +108,16 @@ export const MagicGame = () => {
                     <MagicCardPack playerName={playerOneName}
                                    disabled={disabledPlayButtonForPlayerOne}/>
                 </CardDiv>
+                <CardNumberDiv $column="4 / 5" $row="2 / 2">
+                    <MagicCardNumber playerName={playerOneName} testId={testIds.cardNumberForPlayerOne}/>
+                </CardNumberDiv>
                 <CardDiv $column="2 / 4" $row="3 / 3">
                     <MagicCardPack playerName={playerTwoName}
                                    disabled={disabledPlayButtonForPlayerTwo}/>
                 </CardDiv>
+                <CardNumberDiv $column="4 / 5" $row="3 / 3">
+                    <MagicCardNumber playerName={playerTwoName} testId={testIds.cardNumberForPlayerTwo}/>
+                </CardNumberDiv>
                 <GridDiv $column="1 / 5" $row="4 / 4" style={{
                     marginBottom: '1rem',
                 }}>

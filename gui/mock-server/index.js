@@ -82,9 +82,15 @@ app.put('/server/game/player/active', (req, res) => {
         if (activePlayer === playerOneName) {
             activePlayer = playerTwoName;
             playerTwoManaSlots = playerTwoManaSlots === 0 ? 10 : Math.min(playerTwoManaSlots + 1, 10);
+            currentPlayerTwoCards = [...currentPlayerTwoCards, {
+                "mana": 2
+            }];
         } else {
             activePlayer = playerOneName;
             playerOneManaSlots = playerOneManaSlots === 0 ? 10 : Math.min(playerOneManaSlots + 1, 10);
+            currentPlayerOneCards = [...currentPlayerOneCards, {
+                "mana": 2
+            }];
         }
         res.json({message: 'Active player switched'});
     }, 100);

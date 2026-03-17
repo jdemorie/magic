@@ -327,4 +327,48 @@ describe('MagicGame component', () => {
         expect(playerTwoPlay).toBeDisabled();
     });
 
+    it('should render number of cards of player one', () => {
+        mockUsePlayCardMutation();
+        mockUseGetPlayerHealthAndManaQuery(initialPlayerOneHealthAndMana, initialPlayerTwoHealthAndMana);
+        mockUseGetActivePlayerQuery("Player One");
+        mockUseSetActivePlayerMutation("Player Two");
+        mockUseGetPlayerCardsQuery(initialDamageCard);
+        render(
+            <Provider store={magicStore}>
+                <MemoryRouter>
+                    <MagicGame/>
+                </MemoryRouter>
+            </Provider>
+        );
+        act(() => {
+            magicStore.dispatch(setPlayerOneName("Player One"));
+            magicStore.dispatch(setPlayerTwoName("Player Two"));
+        });
+        const cardNumberForPlayerOne = screen.getByTestId(testIds.cardNumberForPlayerOne);
+        expect(cardNumberForPlayerOne).toBeInTheDocument();
+        expect(cardNumberForPlayerOne).toHaveTextContent('1');
+    });
+
+    it('should render number of cards of player two', () => {
+        mockUsePlayCardMutation();
+        mockUseGetPlayerHealthAndManaQuery(initialPlayerOneHealthAndMana, initialPlayerTwoHealthAndMana);
+        mockUseGetActivePlayerQuery("Player Two");
+        mockUseSetActivePlayerMutation("Player One");
+        mockUseGetPlayerCardsQuery(initialDamageCard);
+        render(
+            <Provider store={magicStore}>
+                <MemoryRouter>
+                    <MagicGame/>
+                </MemoryRouter>
+            </Provider>
+        );
+        act(() => {
+            magicStore.dispatch(setPlayerOneName("Player One"));
+            magicStore.dispatch(setPlayerTwoName("Player Two"));
+        });
+        const cardNumberForPlayerTwo = screen.getByTestId(testIds.cardNumberForPlayerTwo);
+        expect(cardNumberForPlayerTwo).toBeInTheDocument();
+        expect(cardNumberForPlayerTwo).toHaveTextContent('1');
+
+    });
 });

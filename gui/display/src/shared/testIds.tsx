@@ -8,5 +8,7 @@ export const testIds = {
     playButtonForPlayerTwo: 'play-button-player-two',
     passButtonForPlayerTwo: 'pass-button-player-two',
     card: 'card',
+    cardNumberForPlayerOne: 'card-number-player-one',
+    cardNumberForPlayerTwo: 'card-number-player-two',
     exitButton: 'exit-button',
 }
