@@ -6,30 +6,39 @@ import {useStartGame} from "./useStartGame";
 export const useMagicPage = () => {
     const [playerOneErrorText, setPlayerOneErrorText] = useState<string | undefined>(undefined);
     const [playerTwoErrorText, setPlayerTwoErrorText] = useState<string | undefined>(undefined);
-    const {startGame, isStartSuccess} = useStartGame();
+    const {startGame} = useStartGame();
     const setPlayerOneName = useSetPlayerOneName();
     const setPlayerTwoName = useSetPlayerTwoName();
     const playerOneName = usePlayerOneName();
     const playerTwoName = usePlayerTwoName();
     const navigate = useNavigate();
     const [disabled, setDisabled] = useState<boolean>();
+    const [started, setStarted] = useState<boolean>(false);
 
     useEffect(() => {
         setDisabled(playerOneName === "" || playerTwoName === "" || playerOneName === undefined || playerTwoName === undefined || playerOneName === playerTwoName);
-        if (isStartSuccess) {
+        if (started) {
             navigate("/game");
         }
-    }, [playerOneName, playerTwoName, isStartSuccess, navigate]);
+    }, [playerOneName, playerTwoName, navigate, started]);
 
     const onStart = useCallback((): void => {
-        startGame(playerOneName!, playerTwoName!);
-    }, [startGame, playerOneName, playerTwoName]);
+        startGame(() => {
+            setStarted(true);
+        }, (reason) => {
+            setStarted(false);
+        });
+    }, [startGame]);
 
     const onKeyDown = useCallback((event: React.KeyboardEvent<HTMLInputElement>): void => {
         if (event.key === "Enter" && !disabled) {
-            startGame(playerOneName!, playerTwoName!);
+            startGame(() => {
+                setStarted(true);
+            }, (reason) => {
+                setStarted(false);
+            });
         }
-    }, [disabled, playerOneName, playerTwoName, startGame]);
+    }, [disabled, startGame]);
 
     function setError() {
         setPlayerOneErrorText("Player names must be different");

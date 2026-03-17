@@ -60,6 +60,10 @@ export const enhancedApi = projectApi.enhanceEndpoints<
                 {
                     type: "getPlayerHealthAndMana",
                 },
+                {
+                    type: "getPlayerCards",
+                    id: req.playerActiveBean.name
+                },
             ],
         },
         getPlayerCards: {

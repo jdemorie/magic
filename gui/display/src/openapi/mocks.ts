@@ -5,8 +5,31 @@ import {
     useGetPlayerCardsQuery,
     useGetPlayerHealthAndManaQuery,
     usePlayCardMutation,
-    useSetActivePlayerMutation
+    useSetActivePlayerMutation,
+    useStartGameMutation
 } from "./enhancedApi";
+
+export function mockUseStartGameMutation() {
+    const promiseWithUnwrap = {
+        unwrap: () => {
+            return Promise.resolve({
+                data: {
+                    message: "Game started successfully",
+                },
+            });
+        },
+    };
+    const mockMutation = jest.fn().mockImplementation(() => promiseWithUnwrap);
+    (useStartGameMutation as jest.Mock).mockReturnValue([mockMutation]);
+}
+
+export function expectStartGameCalledWith(playerOneName: string, playerTwoName: string) {
+    const mockMutation = (useStartGameMutation as jest.Mock).mock.results[0].value[0];
+    expect(mockMutation).toHaveBeenCalledWith({
+        playerOneName,
+        playerTwoName,
+    });
+}
 
 export function mockUsePlayCardMutation() {
     const promiseWithUnwrap = {

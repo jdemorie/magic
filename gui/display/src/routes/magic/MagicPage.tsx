@@ -6,7 +6,7 @@ import {useMagicPage} from "./useMagicPage";
 import styled from "styled-components";
 import {motion} from "motion/react";
 import {MagicButton} from "../../shared/MagicButton";
-import {InputRef} from "antd";
+import {InputRef, notification} from "antd";
 
 const BackgroundContainer = styled(motion.div)`
     height: 100vh;
@@ -19,6 +19,7 @@ const BackgroundContainer = styled(motion.div)`
 `;
 
 export const MagicPage: FC = () => {
+    const [api, contextHolder] = notification.useNotification();
     const playerOneName = usePlayerOneName();
     const playerTwoName = usePlayerTwoName();
 
@@ -40,40 +41,44 @@ export const MagicPage: FC = () => {
     }, []);
 
     return (
-        <BackgroundContainer initial={{opacity: 0}} animate={{
-            opacity: 1,
-            transition: {duration: 3}
-        }}>
-            <div style={{
-                display: 'flex',
-                justifyContent: 'center',
-                alignItems: 'center',
-                gridRow: '1 / 1',
+        <>
+            {contextHolder}
+            <BackgroundContainer initial={{opacity: 0}} animate={{
+                opacity: 1,
+                transition: {duration: 3}
             }}>
-                <StyledTypography>Magic: the gathering</StyledTypography>
-            </div>
-            <div style={{
-                display: 'flex',
-                flexDirection: 'column',
-                justifyContent: 'center',
-                alignItems: 'center',
-                gridRow: '2 / 2',
-                gap: '1rem',
-            }}>
-                <MagicInput ref={inputRef}
-                            value={playerOneName}
-                            onInputChange={onPlayerOneNameChange}
-                            onInputKeyDown={onKeyDown}
-                            placeholder="Enter name for player one"
-                            error={playerOneErrorText}
-                />
-                <MagicInput value={playerTwoName}
-                            onInputChange={onPlayerTwoNameChange}
-                            onInputKeyDown={onKeyDown}
-                            placeholder="Enter name for player two"
-                            error={playerTwoErrorText}
-                />
-                <MagicButton onClick={onStart} disabled={disabled} text="Start"/>
-            </div>
-        </BackgroundContainer>);
+                <div style={{
+                    display: 'flex',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    gridRow: '1 / 1',
+                }}>
+                    <StyledTypography>Magic: the gathering</StyledTypography>
+                </div>
+                <div style={{
+                    display: 'flex',
+                    flexDirection: 'column',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    gridRow: '2 / 2',
+                    gap: '1rem',
+                }}>
+                    <MagicInput ref={inputRef}
+                                value={playerOneName}
+                                onInputChange={onPlayerOneNameChange}
+                                onInputKeyDown={onKeyDown}
+                                placeholder="Enter name for player one"
+                                error={playerOneErrorText}
+                    />
+                    <MagicInput value={playerTwoName}
+                                onInputChange={onPlayerTwoNameChange}
+                                onInputKeyDown={onKeyDown}
+                                placeholder="Enter name for player two"
+                                error={playerTwoErrorText}
+                    />
+                    <MagicButton onClick={onStart} disabled={disabled} text="Start"/>
+                </div>
+            </BackgroundContainer>
+        </>
+    );
 }

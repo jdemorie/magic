@@ -1,26 +1,25 @@
 import {useStartGameMutation} from "../../openapi/enhancedApi";
-import {useCallback, useState} from "react";
+import {useCallback} from "react";
+import {usePlayerOneName, usePlayerTwoName} from "../../store/magicSlice";
 
 export const useStartGame = () => {
     const [start] = useStartGameMutation();
-    const [isGameStart, setGameStart] = useState(false);
-    const [isStartSuccess, setStartSuccess] = useState(false);
+    const playerOneName = usePlayerOneName();
+    const playerTwoName = usePlayerTwoName();
 
-    const startGame = useCallback((playerOneName: string, playerTwoName: string) => {
-            setGameStart(true);
+    const startGame = useCallback((successCallback: () => void, errorCallback: (reason: any) => void) => {
             start({
                 playerOneName: playerOneName,
                 playerTwoName: playerTwoName,
             }).unwrap().then((_) => {
-                    setStartSuccess(true);
+                    successCallback();
                 }
             ).catch((reason) => {
-                setStartSuccess(false);
-            }).finally(() => {
-                setGameStart(false);
+                const {message} = reason.data;
+                errorCallback(message || "Failed to start game");
             });
         },
-        [start],
+        [start, playerOneName, playerTwoName],
     );
-    return {startGame, isStartSuccess, isGameStart};
+    return {startGame};
 };
