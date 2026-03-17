@@ -2,6 +2,8 @@ import React, {useCallback, useEffect, useState} from "react";
 import {useNavigate} from "react-router";
 import {usePlayerOneName, usePlayerTwoName, useSetPlayerOneName, useSetPlayerTwoName} from "../../store/magicSlice";
 import {useStartGame} from "./useStartGame";
+import {useMessageNotification} from "../../store/useMessageNotification";
+import {NotificationType} from "../../store/notificationSlice";
 
 export const useMagicPage = () => {
     const [playerOneErrorText, setPlayerOneErrorText] = useState<string | undefined>(undefined);
@@ -14,6 +16,7 @@ export const useMagicPage = () => {
     const navigate = useNavigate();
     const [disabled, setDisabled] = useState<boolean>();
     const [started, setStarted] = useState<boolean>(false);
+    const {setNotificationState} = useMessageNotification();
 
     useEffect(() => {
         setDisabled(playerOneName === "" || playerTwoName === "" || playerOneName === undefined || playerTwoName === undefined || playerOneName === playerTwoName);
@@ -27,8 +30,9 @@ export const useMagicPage = () => {
             setStarted(true);
         }, (reason) => {
             setStarted(false);
+            setNotificationState(reason, NotificationType.Error);
         });
-    }, [startGame]);
+    }, [startGame, setNotificationState]);
 
     const onKeyDown = useCallback((event: React.KeyboardEvent<HTMLInputElement>): void => {
         if (event.key === "Enter" && !disabled) {
@@ -36,19 +40,20 @@ export const useMagicPage = () => {
                 setStarted(true);
             }, (reason) => {
                 setStarted(false);
+                setNotificationState(reason, NotificationType.Error);
             });
         }
-    }, [disabled, startGame]);
+    }, [disabled, startGame, setNotificationState]);
 
-    function setError() {
+    const setError = useCallback(() => {
         setPlayerOneErrorText("Player names must be different");
         setPlayerTwoErrorText("Player names must be different");
-    }
+    }, [setPlayerOneErrorText, setPlayerTwoErrorText]);
 
-    function unsetError() {
+    const unsetError = useCallback(() => {
         setPlayerOneErrorText(undefined);
         setPlayerTwoErrorText(undefined);
-    }
+    }, [setPlayerOneErrorText, setPlayerTwoErrorText]);
 
     const onPlayerOneNameChange = useCallback((event: React.ChangeEvent<HTMLInputElement>): void => {
         const value = event.target.value;

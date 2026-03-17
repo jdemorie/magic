@@ -6,7 +6,8 @@ import {useMagicPage} from "./useMagicPage";
 import styled from "styled-components";
 import {motion} from "motion/react";
 import {MagicButton} from "../../shared/MagicButton";
-import {InputRef, notification} from "antd";
+import {InputRef} from "antd";
+import {useMessageNotification} from "../../store/useMessageNotification";
 
 const BackgroundContainer = styled(motion.div)`
     height: 100vh;
@@ -19,9 +20,9 @@ const BackgroundContainer = styled(motion.div)`
 `;
 
 export const MagicPage: FC = () => {
-    const [api, contextHolder] = notification.useNotification();
     const playerOneName = usePlayerOneName();
     const playerTwoName = usePlayerTwoName();
+    const {contextHolder, sendNotification, notificationState} = useMessageNotification();
 
     const {
         onStart,
@@ -39,6 +40,12 @@ export const MagicPage: FC = () => {
             inputRef.current.focus();
         }
     }, []);
+
+    useEffect(() => {
+        if (notificationState) {
+            sendNotification(notificationState.message, notificationState.type);
+        }
+    }, [notificationState, sendNotification]);
 
     return (
         <>

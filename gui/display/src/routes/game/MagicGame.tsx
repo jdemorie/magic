@@ -1,4 +1,4 @@
-import React, {useCallback} from "react";
+import React, {useEffect} from "react";
 import {StyledTypography} from "../../shared/SharedStyles";
 import styled from "styled-components";
 import {useMagicGame} from "./useMagicGame";
@@ -10,7 +10,7 @@ import {testIds} from "../../shared/testIds";
 import {MagicExitButton} from "./MagicExitButton";
 import {MagicButton} from "../../shared/MagicButton";
 import {useGetPlayerHealthAndManaQuery} from "../../openapi/enhancedApi";
-import {notification} from 'antd';
+import {useMessageNotification} from "../../store/useMessageNotification";
 
 const BackgroundContainer = styled(motion.div)`
     height: 100vh;
@@ -44,7 +44,6 @@ const CardDiv = styled.div<{ $column?: string; $row?: string }>`
 `;
 
 export const MagicGame = () => {
-    const [api, contextHolder] = notification.useNotification();
     const playerOneName = usePlayerOneName();
     const playerTwoName = usePlayerTwoName();
     const playerOneHealthAndMana = useGetPlayerHealthAndManaQuery({
@@ -53,6 +52,8 @@ export const MagicGame = () => {
     const playerTwoHealthAndMana = useGetPlayerHealthAndManaQuery({
         playerName: playerTwoName
     });
+    const {contextHolder, sendNotification, notificationState} = useMessageNotification();
+
     const {
         onPlayerOnePlay,
         onPlayerTwoPlay,
@@ -62,51 +63,11 @@ export const MagicGame = () => {
         disabledPlayButtonForPlayerTwo
     } = useMagicGame();
 
-    function onPlayerOnePlayClick() {
-        onPlayerOnePlay(() => {
-            openNotification("You played a card");
-        }, (reason) => {
-            openErrorNotification(reason);
-        });
-    }
-
-    function onPlayerTwoPlayClick() {
-        onPlayerTwoPlay(() => {
-            openNotification("You played a card");
-        }, (reason) => {
-            openErrorNotification(reason);
-        });
-    }
-
-    function onPlayerOnePassedClick() {
-        onPlayerOnePassed(() => {
-            openNotification("You passed the turn to " + playerTwoName);
-        }, (reason) => {
-            openErrorNotification(reason);
-        });
-    }
-
-    function onPlayerTwoPassedClick() {
-        onPlayerTwoPassed(() => {
-            openNotification("You passed the turn to " + playerOneName);
-        }, (reason) => {
-            openErrorNotification(reason);
-        });
-    }
-
-    const openNotification = useCallback((message: string) => {
-        api.info({
-            title: message,
-            placement: "bottomLeft"
-        });
-    }, [api]);
-
-    const openErrorNotification = useCallback((reason: string) => {
-        api.error({
-            title: reason,
-            placement: "bottomLeft"
-        });
-    }, [api]);
+    useEffect(() => {
+        if (notificationState) {
+            sendNotification(notificationState.message, notificationState.type);
+        }
+    }, [notificationState, sendNotification]);
 
     return (
         <>
@@ -126,12 +87,12 @@ export const MagicGame = () => {
                                  value={playerOneHealthAndMana.data?.manaSlots}
                                  color="#696FC7"
                                  testId={testIds.playerOneMana}/>
-                    <MagicButton onClick={onPlayerOnePlayClick}
+                    <MagicButton onClick={onPlayerOnePlay}
                                  testId={testIds.playButtonForPlayerOne}
                                  disabled={disabledPlayButtonForPlayerOne}
                                  src="/attack.png"
                                  tooltipText="Play"/>
-                    <MagicButton onClick={onPlayerOnePassedClick}
+                    <MagicButton onClick={onPlayerOnePassed}
                                  testId={testIds.passButtonForPlayerOne}
                                  disabled={disabledPlayButtonForPlayerOne}
                                  src="/passed.png"
@@ -156,12 +117,12 @@ export const MagicGame = () => {
                                  value={playerTwoHealthAndMana.data?.manaSlots}
                                  color="#696FC7"
                                  testId={testIds.playerTwoMana}/>
-                    <MagicButton onClick={onPlayerTwoPlayClick}
+                    <MagicButton onClick={onPlayerTwoPlay}
                                  testId={testIds.playButtonForPlayerTwo}
                                  disabled={disabledPlayButtonForPlayerTwo}
                                  src="/attack.png"
                                  tooltipText="Play"/>
-                    <MagicButton onClick={onPlayerTwoPassedClick}
+                    <MagicButton onClick={onPlayerTwoPassed}
                                  testId={testIds.passButtonForPlayerTwo}
                                  disabled={disabledPlayButtonForPlayerTwo}
                                  src="/passed.png"

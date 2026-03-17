@@ -2,16 +2,23 @@ import {createSlice} from "@reduxjs/toolkit";
 import {useDispatch, useSelector} from "react-redux";
 import {useCallback} from "react";
 
-//TODO in progress to manage notifications in the app, currently only for magic game, but can be used in other places as well
+export const notificationName = "notification";
+
+export enum NotificationType {
+    Info = "info",
+    Error = "error",
+    Success = "success",
+    Warning = "warning",
+}
 
 interface NotificationState {
-    message: string;
-    type: "info" | "error" | "success" | "warning";
+    message?: string;
+    type?: NotificationType;
 }
 
 const initialState: NotificationState = {
-    message: "",
-    type: "info",
+    message: undefined,
+    type: undefined,
 }
 
 export const notificationSlice = createSlice({
@@ -25,12 +32,13 @@ export const notificationSlice = createSlice({
     },
 })
 
+
 export const useNotification = () =>
-    useSelector((state: { notification: NotificationState }) => state.notification);
+    useSelector((state: { [notificationName]: NotificationState }) => state[notificationName]);
 
 export const useSetNotification = () => {
     const dispatch = useDispatch();
-    return useCallback((message: string, type: "info" | "error" | "success" | "warning") => {
+    return useCallback((message?: string, type?: NotificationType) => {
         dispatch(setNotification({message, type}));
     }, [dispatch]);
 }

@@ -9,6 +9,8 @@ import {
     useSetPlayerTwoSelectedCardIndex
 } from "../../store/magicSlice";
 import {useGetActivePlayerQuery, usePlayCardMutation, useSetActivePlayerMutation} from "../../openapi/enhancedApi";
+import {useMessageNotification} from "../../store/useMessageNotification";
+import {NotificationType} from "../../store/notificationSlice";
 
 export const useMagicGame = () => {
     const navigate = useNavigate();
@@ -21,71 +23,72 @@ export const useMagicGame = () => {
     const activePlayer = useGetActivePlayerQuery();
     const [setActivePlayer] = useSetActivePlayerMutation();
     const [playCard] = usePlayCardMutation();
+    const {setNotificationState} = useMessageNotification();
 
     const onBackButtonClick = useCallback(() => {
         navigate("/magic");
     }, [navigate]);
 
-    const onPlayerOnePlay = useCallback((successCallback: () => void, errorCallback: (reason: any) => void) => {
+    const onPlayerOnePlay = useCallback(() => {
         if (playerOneSelectedCardIndex !== undefined) {
             playCard({
                 playerName: playerOneName,
                 cardIndex: playerOneSelectedCardIndex
-            }).unwrap().then((res) => {
-                successCallback();
+            }).unwrap().then((_) => {
+                setNotificationState("You played a card", NotificationType.Info);
             }).catch((reason) => {
                 const {message} = reason.data;
-                errorCallback(message || "Failed to play card");
+                setNotificationState(message || "Failed to play card", NotificationType.Error);
             })
             setPlayerOneSelectedCardIndex(undefined);
         }
-    }, [playerOneName, playCard, playerOneSelectedCardIndex, setPlayerOneSelectedCardIndex]);
+    }, [playerOneName, playCard, playerOneSelectedCardIndex, setPlayerOneSelectedCardIndex, setNotificationState]);
 
-    const onPlayerOnePassed = useCallback((successCallback: () => void, errorCallback: (reason: any) => void) => {
+    const onPlayerOnePassed = useCallback(() => {
         setActivePlayer({
             playerActiveBean: {
                 name: playerTwoName
             }
-        }).unwrap().then((res) => {
-            successCallback();
+        }).unwrap().then((_) => {
+            setNotificationState("You pass your turn", NotificationType.Info);
         }).catch((reason) => {
             const {message} = reason.data;
-            errorCallback(message || "Failed to pass the turn");
+            setNotificationState(message || "Failed to pass your turn", NotificationType.Error);
         })
-    }, [setActivePlayer, playerTwoName]);
+    }, [setActivePlayer, playerTwoName, setNotificationState]);
 
-    const onPlayerTwoPlay = useCallback((successCallback: () => void, errorCallback: (reason: any) => void) => {
+    const onPlayerTwoPlay = useCallback(() => {
         if (playerTwoSelectedCardIndex !== undefined) {
             playCard({
                 playerName: playerTwoName,
                 cardIndex: playerTwoSelectedCardIndex
-            }).unwrap().then((res) => {
-                successCallback();
+            }).unwrap().then((_) => {
+                setNotificationState("You played a card", NotificationType.Info);
             }).catch((reason) => {
                 const {message} = reason.data;
-                errorCallback(message || "Failed to play card");
+                setNotificationState(message || "Failed to play card", NotificationType.Error);
             })
             setPlayerTwoSelectedCardIndex(undefined);
         }
-    }, [playerTwoName, playCard, playerTwoSelectedCardIndex, setPlayerTwoSelectedCardIndex]);
+    }, [playerTwoName, playCard, playerTwoSelectedCardIndex, setPlayerTwoSelectedCardIndex, setNotificationState]);
 
-    const onPlayerTwoPassed = useCallback((successCallback: () => void, errorCallback: (reason: any) => void) => {
+    const onPlayerTwoPassed = useCallback(() => {
         setActivePlayer({
             playerActiveBean: {
                 name: playerOneName
             }
-        }).unwrap().then((res) => {
-            successCallback();
+        }).unwrap().then((_) => {
+            setNotificationState("You pass your turn", NotificationType.Info);
         }).catch((reason) => {
             const {message} = reason.data;
-            errorCallback(message || "Failed to pass the turn");
+            setNotificationState(message || "Failed to pass your turn", NotificationType.Error);
         })
-    }, [setActivePlayer, playerOneName]);
+    }, [setActivePlayer, playerOneName, setNotificationState]);
 
     const disabledPlayButtonForPlayerOne = useMemo(() => {
         return activePlayer.data?.name !== playerOneName
     }, [activePlayer, playerOneName]);
-    
+
     const disabledPlayButtonForPlayerTwo = useMemo(() => {
         return activePlayer.data?.name !== playerTwoName
     }, [activePlayer, playerTwoName]);
