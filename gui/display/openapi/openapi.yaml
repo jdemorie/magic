@@ -116,9 +116,9 @@ paths:
           $ref: "#/components/responses/NotFound"
         500:
           $ref: "#/components/responses/ServerError"
-  /server/game/card:
+  /server/game/player/card:
     get:
-      summary: "GET server/game/card"
+      summary: "GET server/game/player/card"
       operationId: "getPlayerCards"
       parameters:
         - name: playerName

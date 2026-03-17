@@ -1,6 +1,7 @@
 package com.demo.magic.game;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
@@ -32,6 +33,10 @@ public class GameDamageCardPack {
   public GameDamageCardPack() {
     damageCardList = new ArrayList<>();
     damageCardList.addAll(initial);
+  }
+
+  public List<GameDamageCard> getDamageCardList() {
+    return Collections.unmodifiableList(damageCardList);
   }
 
   public void receives(List<GameDamageCard> damageCards) {

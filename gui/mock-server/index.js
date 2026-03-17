@@ -96,7 +96,7 @@ app.put('/server/game/player/active', (req, res) => {
     }, 100);
 });
 
-app.get('/server/game/card', (req, res) => {
+app.get('/server/game/player/card', (req, res) => {
     const playerName = req.query.playerName;
     const cards = playerName === playerOneName ? currentPlayerOneCards : currentPlayerTwoCards;
     setTimeout(() => {

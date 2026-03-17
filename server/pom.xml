@@ -26,6 +26,11 @@
 
   <dependencies>
     <dependency>
+      <groupId>com.demo.kata</groupId>
+      <artifactId>game</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+    <dependency>
       <groupId>io.micronaut</groupId>
       <artifactId>micronaut-http-server-netty</artifactId>
     </dependency>
