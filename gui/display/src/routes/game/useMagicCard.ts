@@ -16,8 +16,8 @@ export const useMagicCard = ({index, mana, player}: MagicCardProps) => {
     const setPlayerTwoSelectedCardIndex = useSetPlayerTwoSelectedCardIndex();
 
     const srcIcon = useMemo(() => {
-        const value = mana + 1;
-        return `/magic-card-${value}.png`;
+        const manaValue = parseInt(mana, 10);
+        return `/magic-card-${(manaValue + 1).toString()}.png`;
     }, [mana]);
 
     const selected = useMemo(() => {

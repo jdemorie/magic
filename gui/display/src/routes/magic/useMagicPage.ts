@@ -65,7 +65,7 @@ export const useMagicPage = () => {
             unsetError();
             setDisabled(value === "" || playerTwoName === "" || value === undefined || playerTwoName === undefined || value === playerTwoName);
         }
-    }, [setPlayerOneName, playerTwoName]);
+    }, [setPlayerOneName, playerTwoName, setError, unsetError]);
 
     const onPlayerTwoNameChange = useCallback((event: React.ChangeEvent<HTMLInputElement>): void => {
         const value = event.target.value;
@@ -77,7 +77,7 @@ export const useMagicPage = () => {
             unsetError();
             setDisabled(playerOneName === "" || value === "" || playerOneName === undefined || value === undefined || playerOneName === value);
         }
-    }, [setPlayerTwoName, playerOneName]);
+    }, [setPlayerTwoName, playerOneName, setError, unsetError]);
 
     return {
         onStart,

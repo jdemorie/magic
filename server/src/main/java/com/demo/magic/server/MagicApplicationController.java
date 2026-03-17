@@ -55,7 +55,7 @@ public class MagicApplicationController implements DefaultApi {
     return Mono.just(playerBean);
   }
 
-  @Put("/game/player/card")
+  @Put("/game/player/play")
   @Produces(MediaType.APPLICATION_JSON)
   @Consumes(MediaType.APPLICATION_JSON)
   @Override
@@ -83,9 +83,10 @@ public class MagicApplicationController implements DefaultApi {
   @Consumes(MediaType.APPLICATION_JSON)
   @Override
   public Mono<@Valid ResponseBean> startGame(@QueryValue("playerOneName") @NotNull String playerOneName,
-                                             @QueryValue("playerOneName") @NotNull String playerTwoName) {
+                                             @QueryValue("playerTwoName") @NotNull String playerTwoName) {
     GameArea gameArea = new GameArea(new GamePlayer(playerOneName), new GamePlayer(playerTwoName));
     game = gameArea.start();
+    game.activePlayer(playerOneName);
     @Valid ResponseBean responseBean = new ResponseBean("Game started with players: " + playerOneName + " and " + playerTwoName);
     return Mono.just(responseBean);
   }

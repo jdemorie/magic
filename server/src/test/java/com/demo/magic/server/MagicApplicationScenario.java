@@ -23,7 +23,7 @@ public class MagicApplicationScenario {
   }
 
   public MagicApplicationScenario whenIStartGame(String playerOne, String playerTwo) {
-    HttpRequest<?> request = HttpRequest.POST("/server/start?playerOneName=" + playerOne + ",playerTwoName=" + playerTwo, "");
+    HttpRequest<?> request = HttpRequest.POST("/server/start?playerOneName=" + playerOne + "&playerTwoName=" + playerTwo, "");
     response = client.toBlocking().retrieve(request, String.class);
     assertNotNull(response);
     return this;
