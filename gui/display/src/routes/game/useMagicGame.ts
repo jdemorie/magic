@@ -39,7 +39,7 @@ export const useMagicGame = () => {
                 setNotificationState("You played a card", NotificationType.Info);
             }).catch((reason) => {
                 const {message, errorCode} = reason.data;
-                if (errorCode === 1401) {
+                if (errorCode === "GAME_OVER") {
                     setWinnerName(playerOneName);
                 } else {
                     setNotificationState(message || "Failed to play card", NotificationType.Error);
