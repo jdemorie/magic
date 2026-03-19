@@ -1,5 +1,5 @@
 import {useNavigate} from "react-router";
-import {useCallback, useMemo, useState} from "react";
+import {useCallback, useMemo} from "react";
 import {
     usePlayerOneName,
     usePlayerOneSelectedCardIndex,
@@ -11,6 +11,7 @@ import {
 import {useGetActivePlayerQuery, usePlayCardMutation, useSetActivePlayerMutation} from "../../openapi/enhancedApi";
 import {useMessageNotification} from "../../store/useMessageNotification";
 import {NotificationType} from "../../store/notificationSlice";
+import {useWinnerName} from "./useWinnerName";
 
 export const useMagicGame = () => {
     const navigate = useNavigate();
@@ -24,7 +25,7 @@ export const useMagicGame = () => {
     const [setActivePlayer] = useSetActivePlayerMutation();
     const [playCard] = usePlayCardMutation();
     const {setNotificationState} = useMessageNotification();
-    const [winnerName, setWinnerName] = useState<string>();
+    const {winnerName, setWinnerName} = useWinnerName();
 
     const onBackButtonClick = useCallback(() => {
         navigate("/magic");
@@ -71,7 +72,7 @@ export const useMagicGame = () => {
                 setNotificationState("You played a card", NotificationType.Info);
             }).catch((reason) => {
                 const {message, errorCode} = reason.data;
-                if (errorCode === 1401) {
+                if (errorCode === "GAME_OVER") {
                     setWinnerName(playerTwoName);
                 } else {
                     setNotificationState(message || "Failed to play card", NotificationType.Error);

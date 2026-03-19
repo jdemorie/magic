@@ -6,20 +6,21 @@ public class GameAreaTest {
   @Test
   void givenAGameWith2PlayersWhenItStartsThenEachPlayersShouldHave30Health0ManaSlotAnd20DamageCards() {
     GameAreaScenario scenario = new GameAreaScenario();
-    scenario.givenAGameWithPlayers("Alice", "Bob")
+    FakeDamageCardProvider damageCardProvider = new FakeDamageCardProvider();
+    scenario.givenAGameWithPlayers("Alice", "Bob", damageCardProvider)
         .whenGameStarts()
         .thenPlayerShouldHaveHealth("Alice", new GameHealth(30))
         .thenPlayerShouldHaveManaSlot("Alice", new GameManaSlot(0))
-        .thenPlayerShouldHaveDamageCards("Alice", new GameDamageCardPack())
+        .thenPlayerShouldHaveDamageCards("Alice", damageCardProvider.get())
         .thenPlayerShouldHaveHealth("Bob", new GameHealth(30))
         .thenPlayerShouldHaveManaSlot("Bob", new GameManaSlot(0))
-        .thenPlayerShouldHaveDamageCards("Bob", new GameDamageCardPack());
+        .thenPlayerShouldHaveDamageCards("Bob", damageCardProvider.get());
   }
 
   @Test
   void givenAGameWhenItStartsAndDeskGivesRandomDamageCardsToAPlayerThenPlayerShouldHave23DamageCards() {
     GameAreaScenario scenario = new GameAreaScenario();
-    scenario.givenAGameWithPlayers("Alice", "Bob")
+    scenario.givenAGameWithPlayers("Alice", "Bob", new FakeDamageCardProvider())
         .whenGameStarts()
         .whenDeskGivesDamageCardsToPlayer("Alice", 3)
         .thenPlayerShouldHaveHealth("Alice", new GameHealth(30))
@@ -30,7 +31,7 @@ public class GameAreaTest {
   @Test
   void givenAGameWithPlayer1WithZeroManaSlotWhenPlayer1BecomesActiveThenPlayerShouldRefillTo10ManaSlots() {
     GameAreaScenario scenario = new GameAreaScenario();
-    scenario.givenAGameWithPlayers("Alice", "Bob")
+    scenario.givenAGameWithPlayers("Alice", "Bob", new FakeDamageCardProvider())
         .whenGameStarts()
         .thenPlayerShouldHaveHealth("Alice", new GameHealth(30))
         .thenPlayerShouldHaveManaSlot("Alice", new GameManaSlot(0))
@@ -41,7 +42,7 @@ public class GameAreaTest {
   @Test
   void givenAGameWithPlayer1ActiveWhenPlayer1BecomesActiveAgainThenPlayerShouldNotReceiveAdditionalMana() {
     GameAreaScenario scenario = new GameAreaScenario();
-    scenario.givenAGameWithPlayers("Alice", "Bob")
+    scenario.givenAGameWithPlayers("Alice", "Bob", new FakeDamageCardProvider())
         .whenGameStarts()
         .whenPlayerBecomeActive("Alice")
         .thenPlayerShouldHaveManaSlot("Alice", new GameManaSlot(10))
@@ -54,7 +55,7 @@ public class GameAreaTest {
   @Test
   void givenAGameWithPlayer1ActiveWhenPlayer1PlaysManaCardThenPlayer2ShouldHave29Health() {
     GameAreaScenario scenario = new GameAreaScenario();
-    scenario.givenAGameWithPlayers("Alice", "Bob")
+    scenario.givenAGameWithPlayers("Alice", "Bob", new FakeDamageCardProvider())
         .whenGameStarts()
         .thenPlayerShouldHaveHealth("Bob", new GameHealth(30))
         .whenPlayerBecomeActive("Alice")
@@ -65,7 +66,7 @@ public class GameAreaTest {
   @Test
   void givenAGameWithPlayer1ActiveWhenPlayer1BecomesActiveTenTimesThenPlayerShouldNotReceiveMoreThan10ManaSlots() {
     GameAreaScenario scenario = new GameAreaScenario();
-    scenario.givenAGameWithPlayers("Alice", "Bob")
+    scenario.givenAGameWithPlayers("Alice", "Bob", new FakeDamageCardProvider())
         .whenGameStarts()
         .whenPlayerBecomeActive("Alice")
         .thenPlayerShouldHaveManaSlot("Alice", new GameManaSlot(10))
@@ -78,7 +79,7 @@ public class GameAreaTest {
   @Test
   void givenAGameWhenPlayer1BecomesActiveThenPlayerShouldHaveOneMoreDamageCard() {
     GameAreaScenario scenario = new GameAreaScenario();
-    scenario.givenAGameWithPlayers("Alice", "Bob")
+    scenario.givenAGameWithPlayers("Alice", "Bob", new FakeDamageCardProvider())
         .whenGameStarts()
         .thenPlayerShouldHaveNumberOfDamageCards("Alice", 20)
         .whenPlayerBecomeActive("Alice")
@@ -88,7 +89,7 @@ public class GameAreaTest {
   @Test
   void givenAGameWhenPlayerHasNoHealthThenHeLoseTheGame() {
     GameAreaScenario scenario = new GameAreaScenario();
-    scenario.givenAGameWithPlayers("Alice", "Bob")
+    scenario.givenAGameWithPlayers("Alice", "Bob", new FakeDamageCardProvider())
         .whenGameStarts()
         .whenPlayerBecomeActive("Alice")
         .whenActivePlayerPlaysAManaCard(new GameDamageCard(8))
@@ -115,7 +116,7 @@ public class GameAreaTest {
   @Test
   void givenAGameWhenActivePlayerPassesHisTurnThenNextPlayerShouldBecomeActive() {
     GameAreaScenario scenario = new GameAreaScenario();
-    scenario.givenAGameWithPlayers("Alice", "Bob")
+    scenario.givenAGameWithPlayers("Alice", "Bob", new FakeDamageCardProvider())
         .whenGameStarts()
         .whenPlayerBecomeActive("Alice")
         .whenPlayerPassHisTurn("Alice")
@@ -125,7 +126,7 @@ public class GameAreaTest {
   @Test
   void givenAGameWhenActivePlayerPlaysCardWithManaCostHigherThanHisManaSlotThenPlayerShouldNotPlayTheCard() {
     GameAreaScenario scenario = new GameAreaScenario();
-    scenario.givenAGameWithPlayers("Alice", "Bob")
+    scenario.givenAGameWithPlayers("Alice", "Bob", new FakeDamageCardProvider())
         .whenGameStarts()
         .whenPlayerBecomeActive("Alice")
         .whenActivePlayerPlaysAManaCard(new GameDamageCard(8))
@@ -136,7 +137,7 @@ public class GameAreaTest {
   @Test
   void givenAGameWhenPlayerTwoHasNoHealthThenHeCannotBeActiveAnyMore() {
     GameAreaScenario scenario = new GameAreaScenario();
-    scenario.givenAGameWithPlayers("Alice", "Bob")
+    scenario.givenAGameWithPlayers("Alice", "Bob", new FakeDamageCardProvider())
         .whenGameStarts()
         .whenPlayerBecomeActive("Alice")
         .whenActivePlayerPlaysAManaCard(new GameDamageCard(8))
@@ -156,7 +157,7 @@ public class GameAreaTest {
   @Test
   void givenAGameWhenPlayerOneHasNoHealthThenHeCannotBeActiveAnyMore() {
     GameAreaScenario scenario = new GameAreaScenario();
-    scenario.givenAGameWithPlayers("Alice", "Bob")
+    scenario.givenAGameWithPlayers("Alice", "Bob", new FakeDamageCardProvider())
         .whenGameStarts()
         .whenPlayerBecomeActive("Bob")
         .whenActivePlayerPlaysAManaCard(new GameDamageCard(8))

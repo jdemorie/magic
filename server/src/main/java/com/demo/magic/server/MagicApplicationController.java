@@ -84,7 +84,7 @@ public class MagicApplicationController implements DefaultApi {
   @Override
   public Mono<@Valid ResponseBean> startGame(@QueryValue("playerOneName") @NotNull String playerOneName,
                                              @QueryValue("playerTwoName") @NotNull String playerTwoName) {
-    GameArea gameArea = new GameArea(new GamePlayer(playerOneName), new GamePlayer(playerTwoName));
+    GameArea gameArea = new GameArea(new GamePlayer(playerOneName), new GamePlayer(playerTwoName), new EmptyDamageCardProvider());
     game = gameArea.start();
     game.activePlayer(playerOneName);
     game.giveDamageCardsToPlayer(playerOneName, 3);

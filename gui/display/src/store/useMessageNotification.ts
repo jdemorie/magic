@@ -13,25 +13,25 @@ export const useMessageNotification = () => {
                 case NotificationType.Info:
                     api.info({
                         title: message,
-                        placement: "bottomLeft"
+                        placement: "bottomRight"
                     });
                     break;
                 case NotificationType.Error:
                     api.error({
                         title: message,
-                        placement: "bottomLeft"
+                        placement: "bottomRight"
                     });
                     break;
                 case NotificationType.Success:
                     api.success({
                         title: message,
-                        placement: "bottomLeft"
+                        placement: "bottomRight"
                     });
                     break;
                 case NotificationType.Warning:
                     api.warning({
                         title: message,
-                        placement: "bottomLeft"
+                        placement: "bottomRight"
                     });
                     break;
             }

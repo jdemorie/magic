@@ -13,9 +13,11 @@ import {
     mockUseGetActivePlayerQuery,
     mockUseGetPlayerCardsQuery,
     mockUseGetPlayerHealthAndManaQuery,
+    mockUseMessageNotification,
     mockUsePlayCardMutation,
     mockUsePlayCardMutationWithError,
     mockUseSetActivePlayerMutation,
+    mockUseWinnerName,
     reset
 } from "../../../openapi/mocks";
 
@@ -31,6 +33,16 @@ jest.mock("../../../openapi/enhancedApi", () => ({
     useGetPlayerCardsQuery: jest.fn(),
     useSetSelectedPlayerCardMutation: jest.fn(),
     useDeletePlayerCardMutation: jest.fn(),
+}));
+
+jest.mock("../../game/useWinnerName", () => ({
+    ...jest.requireActual("../../game/useWinnerName"),
+    useWinnerName: jest.fn(),
+}));
+
+jest.mock("../../../store/useMessageNotification", () => ({
+    ...jest.requireActual("../../../store/useMessageNotification"),
+    useMessageNotification: jest.fn(),
 }));
 
 const initialPlayerOneHealthAndMana = {
@@ -57,11 +69,7 @@ beforeEach(() => {
 
 describe('MagicGame component', () => {
     it('should render magic game with two players with 20 of health and 0 of mana', async () => {
-        mockUsePlayCardMutation();
-        mockUseGetPlayerHealthAndManaQuery(initialPlayerOneHealthAndMana, initialPlayerTwoHealthAndMana);
-        mockUseGetActivePlayerQuery("Player One");
-        mockUseSetActivePlayerMutation("Player Two");
-        mockUseGetPlayerCardsQuery(initialDamageCard);
+        mockHooks("Player One", "Player Two");
         render(
             <Provider store={magicStore}>
                 <MemoryRouter>
@@ -93,11 +101,7 @@ describe('MagicGame component', () => {
     });
 
     it('should render magic card when player has one', async () => {
-        mockUsePlayCardMutation();
-        mockUseGetPlayerHealthAndManaQuery(initialPlayerOneHealthAndMana, initialPlayerTwoHealthAndMana);
-        mockUseGetActivePlayerQuery("Player One");
-        mockUseSetActivePlayerMutation("Player Two");
-        mockUseGetPlayerCardsQuery(initialDamageCard);
+        mockHooks("Player One", "Player Two");
         render(
             <Provider store={magicStore}>
                 <MemoryRouter>
@@ -116,11 +120,7 @@ describe('MagicGame component', () => {
     });
 
     it('should select and deselect card when player one clicks on it', async () => {
-        mockUsePlayCardMutation();
-        mockUseGetPlayerHealthAndManaQuery(initialPlayerOneHealthAndMana, initialPlayerTwoHealthAndMana);
-        mockUseGetActivePlayerQuery("Player One");
-        mockUseSetActivePlayerMutation("Player Two");
-        mockUseGetPlayerCardsQuery(initialDamageCard);
+        mockHooks("Player One", "Player Two");
         render(
             <Provider store={magicStore}>
                 <MemoryRouter>
@@ -149,11 +149,7 @@ describe('MagicGame component', () => {
     });
 
     it('should select and deselect card when player two clicks on it', async () => {
-        mockUsePlayCardMutation();
-        mockUseGetPlayerHealthAndManaQuery(initialPlayerOneHealthAndMana, initialPlayerTwoHealthAndMana);
-        mockUseGetActivePlayerQuery("Player Two");
-        mockUseSetActivePlayerMutation("Player Two");
-        mockUseGetPlayerCardsQuery(initialDamageCard);
+        mockHooks("Player Two", "Player One");
         render(
             <Provider store={magicStore}>
                 <MemoryRouter>
@@ -187,11 +183,7 @@ describe('MagicGame component', () => {
     });
 
     it('should call play api with correct parameters when player one has played a card', async () => {
-        mockUsePlayCardMutation();
-        mockUseGetPlayerHealthAndManaQuery(initialPlayerOneHealthAndMana, initialPlayerTwoHealthAndMana);
-        mockUseGetActivePlayerQuery("Player One");
-        mockUseSetActivePlayerMutation("Player Two");
-        mockUseGetPlayerCardsQuery(initialDamageCard);
+        mockHooks("Player One", "Player Two");
         render(
             <Provider store={magicStore}>
                 <MemoryRouter>
@@ -216,11 +208,7 @@ describe('MagicGame component', () => {
     });
 
     it('should call play api with correct parameters when player two has played a card', async () => {
-        mockUsePlayCardMutation();
-        mockUseGetPlayerHealthAndManaQuery(initialPlayerOneHealthAndMana, initialPlayerTwoHealthAndMana);
-        mockUseGetActivePlayerQuery("Player Two");
-        mockUseSetActivePlayerMutation("Player One");
-        mockUseGetPlayerCardsQuery(initialDamageCard);
+        mockHooks("Player Two", "Player One");
         render(
             <Provider store={magicStore}>
                 <MemoryRouter>
@@ -245,11 +233,7 @@ describe('MagicGame component', () => {
     });
 
     it('should call active player api with correct parameters when player one has passed his turn', async () => {
-        mockUsePlayCardMutation();
-        mockUseGetPlayerHealthAndManaQuery(initialPlayerOneHealthAndMana, initialPlayerTwoHealthAndMana);
-        mockUseGetActivePlayerQuery("Player One");
-        mockUseSetActivePlayerMutation("Player Two");
-        mockUseGetPlayerCardsQuery(initialDamageCard);
+        mockHooks("Player One", "Player Two");
         render(
             <Provider store={magicStore}>
                 <MemoryRouter>
@@ -270,11 +254,7 @@ describe('MagicGame component', () => {
     });
 
     it('should call active player api with correct parameters when player two has passed his turn', async () => {
-        mockUsePlayCardMutation();
-        mockUseGetPlayerHealthAndManaQuery(initialPlayerOneHealthAndMana, initialPlayerTwoHealthAndMana);
-        mockUseGetActivePlayerQuery("Player Two");
-        mockUseSetActivePlayerMutation("Player One");
-        mockUseGetPlayerCardsQuery(initialDamageCard);
+        mockHooks("Player Two", "Player One");
         render(
             <Provider store={magicStore}>
                 <MemoryRouter>
@@ -295,11 +275,7 @@ describe('MagicGame component', () => {
     });
 
     it('should handle error when player plays a card', async () => {
-        mockUsePlayCardMutationWithError();
-        mockUseGetPlayerHealthAndManaQuery(initialPlayerOneHealthAndMana, initialPlayerTwoHealthAndMana);
-        mockUseGetActivePlayerQuery("Player One");
-        mockUseSetActivePlayerMutation("Player Two");
-        mockUseGetPlayerCardsQuery(initialDamageCard);
+        mockHooks("Player One", "Player Two", {message: "bang!", errorCode: "INTERNAL_SERVER"});
         render(
             <Provider store={magicStore}>
                 <MemoryRouter>
@@ -328,11 +304,7 @@ describe('MagicGame component', () => {
     });
 
     it('should render number of cards of player one', () => {
-        mockUsePlayCardMutation();
-        mockUseGetPlayerHealthAndManaQuery(initialPlayerOneHealthAndMana, initialPlayerTwoHealthAndMana);
-        mockUseGetActivePlayerQuery("Player One");
-        mockUseSetActivePlayerMutation("Player Two");
-        mockUseGetPlayerCardsQuery(initialDamageCard);
+        mockHooks("Player One", "Player Two");
         render(
             <Provider store={magicStore}>
                 <MemoryRouter>
@@ -350,11 +322,7 @@ describe('MagicGame component', () => {
     });
 
     it('should render number of cards of player two', () => {
-        mockUsePlayCardMutation();
-        mockUseGetPlayerHealthAndManaQuery(initialPlayerOneHealthAndMana, initialPlayerTwoHealthAndMana);
-        mockUseGetActivePlayerQuery("Player Two");
-        mockUseSetActivePlayerMutation("Player One");
-        mockUseGetPlayerCardsQuery(initialDamageCard);
+        mockHooks("Player One", "Player Two");
         render(
             <Provider store={magicStore}>
                 <MemoryRouter>
@@ -371,4 +339,76 @@ describe('MagicGame component', () => {
         expect(cardNumberForPlayerTwo).toHaveTextContent('1');
 
     });
+
+    it('should render winner dialog when player one has won', () => {
+        mockHooks("Player One", "Player Two", {message: "game over", errorCode: "GAME_OVER"}, "Player One");
+        render(
+            <Provider store={magicStore}>
+                <MemoryRouter>
+                    <MagicGame/>
+                </MemoryRouter>
+            </Provider>
+        );
+        act(() => {
+            magicStore.dispatch(setPlayerOneName("Player One"));
+            magicStore.dispatch(setPlayerTwoName("Player Two"));
+        });
+        const card = screen.getByTestId(`${testIds.card}-Player One-0-3`);
+        expect(card).toBeInTheDocument();
+        act(() => {
+            userEvent.click(card);
+        });
+        const playerOnePlay = screen.getByTestId(`${testIds.playButtonForPlayerOne}`);
+        expect(playerOnePlay).toBeInTheDocument();
+        expect(playerOnePlay).toBeEnabled();
+        act(() => {
+            userEvent.click(playerOnePlay);
+        });
+        const winnerDialog = screen.getByRole('dialog');
+        expect(winnerDialog).toBeInTheDocument();
+        expect(within(winnerDialog).getByText(/Player One has won !/i)).toBeInTheDocument();
+    });
+    
+    it('should render winner dialog when player two has won', () => {
+        mockHooks("Player Two", "Player One", {message: "game over", errorCode: "GAME_OVER"}, "Player Two");
+        render(
+            <Provider store={magicStore}>
+                <MemoryRouter>
+                    <MagicGame/>
+                </MemoryRouter>
+            </Provider>
+        );
+        act(() => {
+            magicStore.dispatch(setPlayerOneName("Player One"));
+            magicStore.dispatch(setPlayerTwoName("Player Two"));
+        });
+        const card = screen.getByTestId(`${testIds.card}-Player Two-0-3`);
+        expect(card).toBeInTheDocument();
+        act(() => {
+            userEvent.click(card);
+        });
+        const playerTwoPlay = screen.getByTestId(`${testIds.playButtonForPlayerTwo}`);
+        expect(playerTwoPlay).toBeInTheDocument();
+        expect(playerTwoPlay).toBeEnabled();
+        act(() => {
+            userEvent.click(playerTwoPlay);
+        });
+        const winnerDialog = screen.getByRole('dialog');
+        expect(winnerDialog).toBeInTheDocument();
+        expect(within(winnerDialog).getByText(/Player Two has won !/i)).toBeInTheDocument();
+    });
 });
+
+function mockHooks(playerOne: string, playerTwo: string, playError?: { message: string, errorCode: string }, winner?: string) {
+    if (playError) {
+        mockUsePlayCardMutationWithError(playError.message, playError.errorCode);
+    } else {
+        mockUsePlayCardMutation();
+    }
+    mockUseGetPlayerHealthAndManaQuery(initialPlayerOneHealthAndMana, initialPlayerTwoHealthAndMana);
+    mockUseGetActivePlayerQuery(playerOne);
+    mockUseSetActivePlayerMutation(playerTwo);
+    mockUseGetPlayerCardsQuery(initialDamageCard);
+    mockUseWinnerName(winner);
+    mockUseMessageNotification();
+}

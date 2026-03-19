@@ -8,6 +8,9 @@ import {
     useSetActivePlayerMutation,
     useStartGameMutation
 } from "./enhancedApi";
+import {useWinnerName} from "../routes/game/useWinnerName";
+import {useMessageNotification} from "../store/useMessageNotification";
+import {NotificationType} from "../store/notificationSlice";
 
 export function mockUseStartGameMutation() {
     const promiseWithUnwrap = {
@@ -45,10 +48,11 @@ export function mockUsePlayCardMutation() {
     (usePlayCardMutation as jest.Mock).mockReturnValue([mockMutation]);
 }
 
-export function mockUsePlayCardMutationWithError() {
+export function mockUsePlayCardMutationWithError(message: string, errorCode: string) {
     const error = {
         data: {
-            message: "An error occurred while playing the card",
+            message,
+            errorCode,
         },
     }
     const promiseWithUnwrap = {
@@ -78,9 +82,14 @@ export function mockUseGetPlayerCardsQuery(cards: DamageCardBean[]) {
     mocked.mockReturnValue({data: cards});
 }
 
-export function mockUseGetPlayerCardsQueryImplementation(implementation: (args: { playerName: string }) => { data: DamageCardBean[] }) {
-    const mocked = useGetPlayerCardsQuery as jest.Mock;
-    mocked.mockImplementation(implementation);
+export function mockUseWinnerName(winnerName?: string) {
+    const mocked = useWinnerName as jest.Mock;
+    mocked.mockReturnValue({winnerName, setWinnerName: jest.fn()});
+}
+
+export function mockUseMessageNotification(message?: string, type?: NotificationType) {
+    const mocked = useMessageNotification as jest.Mock;
+    mocked.mockReturnValue({notificationState: {message, type}, setNotificationState: jest.fn(), sendNotification: jest.fn(), contextHolder: null});
 }
 
 export function mockUseGetActivePlayerQuery(playerName: string) {
@@ -117,4 +126,6 @@ export function reset() {
     (useGetPlayerCardsQuery as jest.Mock).mockReset();
     (useGetActivePlayerQuery as jest.Mock).mockReset();
     (useSetActivePlayerMutation as jest.Mock).mockReset();
+    (useWinnerName as jest.Mock).mockReset();
+    (useMessageNotification as jest.Mock).mockReset();
 }

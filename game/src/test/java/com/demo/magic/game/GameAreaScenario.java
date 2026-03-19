@@ -1,14 +1,15 @@
 package com.demo.magic.game;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import java.util.List;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 public class GameAreaScenario {
   private GameArea gameArea;
   private Game game;
 
-  public GameAreaScenario givenAGameWithPlayers(String firstPlayer, String secondPlayer) {
-    gameArea = new GameArea(new GamePlayer(firstPlayer), new GamePlayer(secondPlayer));
+  public GameAreaScenario givenAGameWithPlayers(String firstPlayer, String secondPlayer, GameDamageCardProvider cardProvider) {
+    gameArea = new GameArea(new GamePlayer(firstPlayer), new GamePlayer(secondPlayer), cardProvider);
     return this;
   }
 
@@ -52,8 +53,8 @@ public class GameAreaScenario {
     return this;
   }
 
-  public GameAreaScenario thenPlayerShouldHaveDamageCards(String player, GameDamageCardPack expectedDamageCards) {
-    assertEquals(expectedDamageCards, game.getPlayerDamageCardPack(player));
+  public GameAreaScenario thenPlayerShouldHaveDamageCards(String player, List<GameDamageCard> expectedDamageCards) {
+    assertArrayEquals(expectedDamageCards.toArray(), game.getPlayerDamageCardPack(player).getDamageCardList().toArray());
     return this;
   }
 

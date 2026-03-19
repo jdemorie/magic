@@ -5,9 +5,11 @@ public final class Game {
   private final GamePlayer secondPlayer;
   private final GameDesk desk;
 
-  public Game(GamePlayer firstPlayer, GamePlayer secondPlayer) {
+  public Game(GamePlayer firstPlayer, GamePlayer secondPlayer, GameDamageCardProvider cardProvider) {
     this.firstPlayer = firstPlayer;
+    this.firstPlayer.receivesDamageCards(cardProvider.get());
     this.secondPlayer = secondPlayer;
+    this.secondPlayer.receivesDamageCards(cardProvider.get());
     this.desk = new GameDesk();
   }
 

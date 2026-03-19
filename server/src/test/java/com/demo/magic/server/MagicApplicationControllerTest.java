@@ -22,7 +22,7 @@ public class MagicApplicationControllerTest {
         .whenIStartGame("Bob", "Alice")
         .thenPlayerShouldHaveHealthAndMana("Alice", 30, 0)
         .thenPlayerShouldHaveHealthAndMana("Bob", 30, 10)
-        .thenPlayerShouldHaveDamageCards("Alice", 23)
-        .thenPlayerShouldHaveDamageCards("Bob", 24);
+        .thenPlayerShouldHaveDamageCards("Alice", 3)
+        .thenPlayerShouldHaveDamageCards("Bob", 4);
   }
 }

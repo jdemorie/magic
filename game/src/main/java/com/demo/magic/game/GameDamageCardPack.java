@@ -7,32 +7,9 @@ import java.util.Objects;
 
 public class GameDamageCardPack {
   private final List<GameDamageCard> damageCardList;
-  private static final List<GameDamageCard> initial = List.of(
-      new GameDamageCard(0),
-      new GameDamageCard(0),
-      new GameDamageCard(1),
-      new GameDamageCard(1),
-      new GameDamageCard(2),
-      new GameDamageCard(2),
-      new GameDamageCard(2),
-      new GameDamageCard(3),
-      new GameDamageCard(3),
-      new GameDamageCard(3),
-      new GameDamageCard(3),
-      new GameDamageCard(4),
-      new GameDamageCard(4),
-      new GameDamageCard(4),
-      new GameDamageCard(5),
-      new GameDamageCard(5),
-      new GameDamageCard(6),
-      new GameDamageCard(6),
-      new GameDamageCard(7),
-      new GameDamageCard(8)
-  );
 
   public GameDamageCardPack() {
     damageCardList = new ArrayList<>();
-    damageCardList.addAll(initial);
   }
 
   public List<GameDamageCard> getDamageCardList() {
@@ -66,5 +43,12 @@ public class GameDamageCardPack {
   @Override
   public int hashCode() {
     return Objects.hashCode(damageCardList);
+  }
+
+  @Override
+  public String toString() {
+    return "GameDamageCardPack{" +
+           "damageCardList=" + damageCardList +
+           '}';
   }
 }
